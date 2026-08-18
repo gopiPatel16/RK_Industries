@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import BrandLogo from "@/components/chrome/BrandLogo";
 import { site } from "@/lib/site";
 
 /**
@@ -69,9 +70,12 @@ export default function Loader() {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             exit={{ opacity: 0, scale: 1.06, transition: { duration: 0.5 } }}
           >
-            <div className="font-serif text-4xl tracking-[0.16em] text-champagne md:text-6xl">
-              {site.shortName.toUpperCase()}
-            </div>
+            {/* the navbar wordmark, scaled up — same two-tone lettering and door mark */}
+            <BrandLogo
+              className="items-center"
+              showTagline={false}
+              sizeClass="text-4xl md:text-6xl"
+            />
             <motion.div
               className="mx-auto mt-4 h-px w-40 bg-gradient-to-r from-transparent via-copper to-transparent"
               initial={{ scaleX: 0 }}
@@ -79,7 +83,8 @@ export default function Loader() {
               transition={{ delay: 0.6, duration: 1 }}
             />
             <div className="mt-4 text-[0.65rem] uppercase tracking-[0.4em] text-ivory-dim">
-              Industries · Doors &amp; Plywood · Est. {new Date().getFullYear() - site.stats.years}
+              Plywood · Flush Doors · Block Boards · Est.{" "}
+              {new Date().getFullYear() - site.stats.years}
             </div>
           </motion.div>
         </motion.div>

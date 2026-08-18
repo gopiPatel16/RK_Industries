@@ -8,23 +8,7 @@ import { site, nav } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
 import Magnetic from "@/components/fx/Magnetic";
-
-function Monogram() {
-  return (
-    <div className="flex items-center gap-3" data-cursor>
-      <div className="relative flex h-10 w-8 items-center justify-center rounded-t-full border border-copper/60 bg-gradient-to-b from-walnut-700 to-walnut-900">
-        <span className="font-serif text-base text-copper-bright">{site.initials}</span>
-        <span className="absolute right-1 top-1/2 h-2 w-0.5 rounded-full bg-copper-bright/80" />
-      </div>
-      <div className="leading-none">
-        <div className="font-serif text-lg tracking-wide text-ivory">{site.shortName}</div>
-        <div className="text-[0.58rem] uppercase tracking-[0.28em] text-ivory-dim">
-          Industries · Doors · Ply
-        </div>
-      </div>
-    </div>
-  );
-}
+import BrandLogo from "@/components/chrome/BrandLogo";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -119,7 +103,7 @@ export default function Navbar() {
           )}
         >
           <button onClick={() => go("#home")} aria-label={`${site.name} home`}>
-            <Monogram />
+            <BrandLogo />
           </button>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
@@ -139,7 +123,7 @@ export default function Navbar() {
 
           <div className="hidden lg:block">
             <Magnetic>
-              <button onClick={() => go("#contact")} className="btn-primary !px-6 !py-2.5 text-xs">
+              <button onClick={() => go("#configurator")} className="btn-primary !px-6 !py-2.5 text-xs">
                 Request a Quote
               </button>
             </Magnetic>
@@ -165,7 +149,7 @@ export default function Navbar() {
             className="fixed inset-0 z-[70] flex flex-col bg-walnut-950/95 backdrop-blur-xl lg:hidden"
           >
             <div className="flex items-center justify-between px-5 py-4">
-              <Monogram />
+              <BrandLogo />
               <button onClick={() => setOpen(false)} aria-label="Close menu" className="p-2 text-ivory">
                 <X />
               </button>

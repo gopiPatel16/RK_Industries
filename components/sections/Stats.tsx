@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 const items = [
   { to: site.stats.years, suffix: "+", label: "Years of Craft" },
   { to: site.stats.doors, suffix: "+", label: "Doors Manufactured" },
-  { to: site.stats.dealers, suffix: "+", label: "Dealer Partners" },
+  { to: site.stats.customers, suffix: "+", label: "Customers" },
   { to: site.stats.cities, suffix: "+", label: "Cities Served" },
 ];
 

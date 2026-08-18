@@ -1,163 +1,188 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Axe, Scissors, Sparkles, Combine, SearchCheck, Package } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { stations, spellCount } from "@/lib/gallery";
+import { Reveal } from "@/components/fx/Reveal";
+import { cn } from "@/lib/utils";
 
-gsap.registerPlugin(ScrollTrigger);
+/**
+ * A guided walk of the factory floor — one station per photograph, moved
+ * with the arrows (or arrow keys / swipe). Deliberately NOT scroll-driven:
+ * the page scrolls normally past this section.
+ */
+const GAP_PX = 20; // matches `gap-5` on the track
 
-const stages = [
-  {
-    icon: Axe,
-    title: "Wood Selection",
-    copy: "Only FSC-tracked hardwood with under 12% moisture makes it past the gate.",
-    stat: "12% max moisture",
-    hue: "wood-teak",
-  },
-  {
-    icon: Scissors,
-    title: "Precision Cutting",
-    copy: "CNC panel saws hold tolerances a human hair would fail.",
-    stat: "±0.5 mm tolerance",
-    hue: "wood-walnut",
-  },
-  {
-    icon: Combine,
-    title: "Hot Pressing",
-    copy: "Hydraulic day-light presses fuse core and face at 110°C.",
-    stat: "140 tonnes of press",
-    hue: "wood-mahogany",
-  },
-  {
-    icon: Sparkles,
-    title: "Polishing",
-    copy: "Wide-belt sanders take every face to a 240-grit silk finish.",
-    stat: "240-grit finish",
-    hue: "wood-oak",
-  },
-  {
-    icon: SearchCheck,
-    title: "Quality Checks",
-    copy: "Every single door is checked twice — squareness, bond, finish.",
-    stat: "2× inspection, 100% of doors",
-    hue: "wood-wenge",
-  },
-  {
-    icon: Package,
-    title: "Packaging",
-    copy: "Corner-guarded, shrink-wrapped, and dispatched across India.",
-    stat: "85+ cities served",
-    hue: "wood-teak",
-  },
-];
-
-/** Cinematic horizontal-scroll tour of the factory floor. */
 export default function Factory() {
-  const root = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const [perView, setPerView] = useState(3);
+  /**
+   * Distance to shift per step, in pixels. Measured rather than expressed as a
+   * percentage: a % translate resolves against the track's own width (all
+   * twelve cards) rather than the visible area, which slides the wrong amount.
+   */
+  const [step, setStep] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  /** Pointer x where a swipe began, so touch users can flick between cards. */
+  const swipeStart = useRef<number | null>(null);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const el = track.current!;
-      const scroll = () => el.scrollWidth - window.innerWidth;
-      gsap.to(el, {
-        x: () => -scroll(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: () => `+=${scroll()}`,
-          scrub: 0.6,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, root);
-    return () => ctx.revert();
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = window.innerWidth;
+      const pv = w < 640 ? 1 : w < 1024 ? 2 : 3;
+      setPerView(pv);
+      const cardW = (el.clientWidth - (pv - 1) * GAP_PX) / pv;
+      setStep(cardW + GAP_PX);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
+
+  const maxIndex = Math.max(0, stations.length - perView);
+  const clamped = Math.min(index, maxIndex);
+  const go = (dir: -1 | 1) =>
+    setIndex((i) => Math.min(maxIndex, Math.max(0, i + dir)));
+
+  // keyboard support when the carousel has focus
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+  };
+
+  const atStart = clamped === 0;
+  const atEnd = clamped >= maxIndex;
 
   return (
     <section
       id="factory"
-      ref={root}
-      className="relative h-svh overflow-hidden bg-walnut-950"
+      className="relative overflow-hidden bg-walnut-950 py-24 lg:py-32"
     >
-      <div className="absolute left-6 top-16 z-10 lg:left-12 lg:top-24">
-        <div className="eyebrow mb-3">The factory floor</div>
-        <h2 className="max-w-md font-serif text-3xl leading-tight text-ivory md:text-4xl">
-          Six stations. Zero shortcuts.
-        </h2>
-      </div>
+      <div className="mx-auto max-w-7xl px-6">
+        {/* ── Heading + arrows ── */}
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <Reveal>
+              <div className="eyebrow mb-3">The factory floor</div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h2 className="max-w-md font-serif text-3xl leading-tight text-ivory md:text-4xl">
+                {spellCount(stations.length)} stations. Zero shortcuts.
+              </h2>
+            </Reveal>
+          </div>
 
-      <div
-        ref={track}
-        className="flex h-full items-end gap-6 px-6 pb-14 pt-56 will-change-transform lg:items-center lg:px-12 lg:pt-0"
-      >
-        {stages.map((s, i) => {
-          const Icon = s.icon;
-          return (
-            <article
-              key={s.title}
-              className="glass reflect noise relative flex h-[62vh] w-[78vw] shrink-0 flex-col justify-end overflow-hidden rounded-[1.75rem] p-7 md:w-[46vw] lg:h-[64vh] lg:w-[34vw]"
-            >
-              {/* "footage" — animated wood pan standing in for autoplay video */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div
-                  className={`wood ${s.hue} absolute inset-[-15%]`}
-                  style={{
-                    animation: `slowZoom ${16 + i * 2}s ease-in-out infinite alternate`,
-                  }}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(19,9,6,0.25) 0%, rgba(19,9,6,0.55) 55%, rgba(19,9,6,0.92) 100%)",
-                  }}
-                />
-                {/* light sweep = machine movement */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(105deg, transparent 42%, rgba(255,205,140,0.1) 50%, transparent 58%)",
-                    backgroundSize: "300% 100%",
-                    animation: `shimmer ${5 + i}s linear infinite`,
-                  }}
-                />
-              </div>
+          <Reveal delay={0.2}>
+            <div className="flex items-center gap-3">
+              <span className="mr-2 font-serif text-sm text-ivory-dim">
+                <span className="text-copper-bright">
+                  {String(clamped + 1).padStart(2, "0")}
+                </span>
+                <span className="mx-1 opacity-50">/</span>
+                {String(stations.length).padStart(2, "0")}
+              </span>
+              {([-1, 1] as const).map((dir) => {
+                const disabled = dir === -1 ? atStart : atEnd;
+                const Icon = dir === -1 ? ArrowLeft : ArrowRight;
+                return (
+                  <button
+                    key={dir}
+                    onClick={() => go(dir)}
+                    disabled={disabled}
+                    aria-label={dir === -1 ? "Previous station" : "Next station"}
+                    className={cn(
+                      "flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300",
+                      disabled
+                        ? "cursor-not-allowed border-champagne/10 text-ivory-dim/30"
+                        : "border-copper/45 text-copper-bright hover:bg-copper/15 hover:shadow-[0_0_24px_rgba(212,161,90,0.35)]"
+                    )}
+                  >
+                    <Icon size={16} />
+                  </button>
+                );
+              })}
+            </div>
+          </Reveal>
+        </div>
 
-              <div className="relative z-10">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="glass flex h-10 w-10 items-center justify-center rounded-full">
-                    <Icon size={16} className="text-copper-bright" />
-                  </span>
-                  <span className="font-serif text-5xl text-champagne/15">
+        {/* ── Track ── */}
+        <div
+          ref={viewportRef}
+          className="relative mt-10 overflow-hidden focus:outline-none"
+          tabIndex={0}
+          onKeyDown={onKeyDown}
+          onPointerDown={(e) => { swipeStart.current = e.clientX; }}
+          onPointerUp={(e) => {
+            if (swipeStart.current === null) return;
+            const dx = e.clientX - swipeStart.current;
+            if (dx < -50) go(1);
+            else if (dx > 50) go(-1);
+            swipeStart.current = null;
+          }}
+          onPointerCancel={() => { swipeStart.current = null; }}
+          role="group"
+          aria-roledescription="carousel"
+          aria-label="Factory floor stations"
+        >
+          <div
+            className="flex gap-5 will-change-transform"
+            style={{
+              transform: `translate3d(${-clamped * step}px, 0, 0)`,
+              transition: "transform 0.75s cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          >
+            {stations.map((s, i) => (
+              <article
+                key={s.src}
+                aria-hidden={i < clamped || i >= clamped + perView}
+                className="relative shrink-0 overflow-hidden rounded-[1.5rem] border border-champagne/10"
+                style={{ width: `calc((100% - ${(perView - 1) * GAP_PX}px) / ${perView})` }}
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src={s.src}
+                    alt={`${s.title} — ${s.caption}`}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                  />
+                  {/* keeps the photo's own burnt-in caption legible */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-walnut-950/10 to-transparent" />
+                  <span className="absolute right-4 top-4 rounded-full bg-walnut-950/70 px-2.5 py-1 font-serif text-[0.7rem] text-copper-bright backdrop-blur-sm">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="font-serif text-2xl text-ivory">{s.title}</h3>
-                <p className="mt-2 max-w-xs text-[0.82rem] leading-relaxed text-ivory-dim">
-                  {s.copy}
-                </p>
-                <div className="mt-4 inline-block rounded-full border border-copper/40 bg-walnut-950/60 px-3.5 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-copper-bright">
-                  {s.stat}
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-ivory">{s.title}</h3>
+                  <p className="mt-2 text-[0.82rem] leading-relaxed text-ivory-dim">
+                    {s.caption}
+                  </p>
+                  <div className="mt-4 inline-block rounded-full border border-copper/40 bg-walnut-950/60 px-3.5 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-copper-bright">
+                    {s.cat}
+                  </div>
                 </div>
-              </div>
-            </article>
-          );
-        })}
-
-        {/* end card */}
-        <div className="flex h-[62vh] w-[60vw] shrink-0 items-center justify-center md:w-[36vw]">
-          <div className="text-center">
-            <div className="font-serif text-4xl leading-tight text-champagne md:text-5xl">
-              Then it ships.
-            </div>
-            <div className="mt-3 text-sm text-ivory-dim">Keep scrolling ↓</div>
+              </article>
+            ))}
           </div>
+        </div>
+
+        {/* ── Progress rail ── */}
+        <div className="mt-8 flex items-center gap-1.5">
+          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Go to station ${i + 1}`}
+              className={cn(
+                "h-1 rounded-full transition-all duration-500",
+                i === clamped ? "w-10 bg-copper-bright" : "w-5 bg-champagne/15 hover:bg-champagne/30"
+              )}
+            />
+          ))}
         </div>
       </div>
     </section>

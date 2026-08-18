@@ -49,20 +49,11 @@ type City = {
 
 const cities: City[] = [
   { name: "Raipur — HQ & Works", x: 48, y: 56, kind: "hq" },
-  { name: "Bhilai", x: 45, y: 59, kind: "active" },
-  { name: "Bilaspur", x: 50, y: 52, kind: "active" },
-  { name: "Nagpur", x: 40, y: 57, kind: "active" },
-  { name: "Delhi NCR", x: 33, y: 30, kind: "active" },
-  { name: "Jaipur", x: 28, y: 36, kind: "active" },
-  { name: "Ahmedabad", x: 17, y: 50, kind: "active" },
-  { name: "Mumbai", x: 19, y: 63, kind: "active" },
-  { name: "Pune", x: 22, y: 66, kind: "active" },
-  { name: "Hyderabad", x: 38, y: 69, kind: "active" },
-  { name: "Kolkata", x: 70, y: 51, kind: "active" },
-  { name: "Bengaluru", x: 35, y: 84, kind: "upcoming" },
-  { name: "Chennai", x: 44, y: 82, kind: "upcoming" },
-  { name: "Lucknow", x: 45, y: 37, kind: "upcoming" },
-  { name: "Indore", x: 28, y: 51, kind: "upcoming" },
+  { name: "Chhattisgarh", x: 51, y: 53, kind: "active" },
+  { name: "Odisha", x: 58, y: 62, kind: "active" },
+  { name: "Gondia", x: 44, y: 57, kind: "active" },
+  { name: "Nagpur", x: 40, y: 58, kind: "active" },
+  { name: "Jabalpur", x: 38, y: 48, kind: "active" },
 ];
 
 export default function DealerMap() {
@@ -72,16 +63,16 @@ export default function DealerMap() {
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <Reveal>
-            <div className="eyebrow mb-5">Dealer network</div>
+            <div className="eyebrow mb-5">Customer network</div>
           </Reveal>
           <h2 className="font-serif text-[clamp(2rem,4.5vw,3.4rem)] leading-tight text-ivory">
             <SplitText text="Rooted in Chhattisgarh. Reaching across India." />
           </h2>
           <Reveal delay={0.15}>
             <p className="mt-6 max-w-md text-[0.95rem] leading-relaxed text-ivory-dim">
-              {site.stats.dealers}+ dealer partners stock {site.shortName} today, anchored by our
-              works in Birgaon. South India joins the map next — Bengaluru and Chennai
-              distribution opens this year.
+              {site.stats.customers}+ customers stock {site.shortName} today across
+              Chhattisgarh, Odisha, Jabalpur, Gondia and Nagpur — all served from our
+              works in Birgaon.
             </p>
           </Reveal>
           <Reveal delay={0.25}>
@@ -95,17 +86,13 @@ export default function DealerMap() {
               </div>
               <div className="flex items-center gap-3 text-ivory-dim">
                 <span className="mx-0.5 h-2 w-2 rounded-full bg-champagne/80" />
-                Active dealer cities
-              </div>
-              <div className="flex items-center gap-3 text-ivory-dim">
-                <span className="mx-0.5 h-2 w-2 rounded-full border border-copper/70" />
-                Expansion — opening 2026-27
+                Customer cities &amp; states
               </div>
             </div>
           </Reveal>
           <Reveal delay={0.35}>
             <button onClick={() => scrollToSection("#contact")} className="btn-ghost mt-9 inline-flex">
-              Become a Dealer
+              Become a Customer
             </button>
           </Reveal>
         </div>

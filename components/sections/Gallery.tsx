@@ -1,74 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Reveal, SplitText } from "@/components/fx/Reveal";
 import { cn } from "@/lib/utils";
-
-const categories = ["All", "Flush Doors", "Plywood", "Factory", "Installations"] as const;
-type Category = (typeof categories)[number];
-
-type Item = {
-  id: number;
-  cat: Exclude<Category, "All">;
-  title: string;
-  place: string;
-  hue: string;
-  ratio: string;
-  overlay: string;
-};
-
-const items: Item[] = [
-  { id: 1, cat: "Flush Doors", title: "Walnut Twin-Inlay Entry", place: "Private villa, Raipur", hue: "wood-walnut", ratio: "aspect-[3/4]", overlay: "radial-gradient(60% 50% at 50% 30%, rgba(255,205,140,0.18), transparent 70%)" },
-  { id: 2, cat: "Plywood", title: "BWP Marine Stack", place: "Dispatch bay", hue: "wood-teak", ratio: "aspect-[4/3]", overlay: "linear-gradient(160deg, rgba(255,205,140,0.1), transparent 60%)" },
-  { id: 3, cat: "Factory", title: "Hot Press Line 2", place: "Birgaon works", hue: "wood-mahogany", ratio: "aspect-square", overlay: "radial-gradient(50% 60% at 70% 40%, rgba(255,150,60,0.2), transparent 70%)" },
-  { id: 4, cat: "Installations", title: "Hotel Corridor Suite", place: "Hotel Amaltas, Jabalpur", hue: "wood-wenge", ratio: "aspect-[3/4]", overlay: "linear-gradient(200deg, rgba(232,168,96,0.14), transparent 55%)" },
-  { id: 5, cat: "Flush Doors", title: "Golden Teak Quad", place: "Showroom display", hue: "wood-teak", ratio: "aspect-[3/5]", overlay: "radial-gradient(70% 50% at 50% 60%, rgba(255,205,140,0.15), transparent 70%)" },
-  { id: 6, cat: "Factory", title: "Veneer Matching Table", place: "Finishing hall", hue: "wood-oak", ratio: "aspect-[4/3]", overlay: "linear-gradient(120deg, rgba(255,240,214,0.12), transparent 50%)" },
-  { id: 7, cat: "Plywood", title: "Calibrated 19 mm", place: "QC station", hue: "wood-oak", ratio: "aspect-square", overlay: "linear-gradient(180deg, transparent 50%, rgba(19,9,6,0.5))" },
-  { id: 8, cat: "Installations", title: "Clinic Fit-out", place: "Durg", hue: "wood-walnut", ratio: "aspect-[4/5]", overlay: "radial-gradient(60% 40% at 30% 30%, rgba(232,168,96,0.16), transparent 70%)" },
-  { id: 9, cat: "Flush Doors", title: "Mahogany Grand Entry", place: "Farmhouse, Naya Raipur", hue: "wood-mahogany", ratio: "aspect-[3/5]", overlay: "radial-gradient(60% 50% at 50% 20%, rgba(255,180,100,0.2), transparent 70%)" },
-  { id: 10, cat: "Factory", title: "Timber Yard at Dawn", place: "Birgaon works", hue: "wood-teak", ratio: "aspect-[4/3]", overlay: "linear-gradient(180deg, rgba(255,205,140,0.16), transparent 60%)" },
-  { id: 11, cat: "Plywood", title: "Core Composition", place: "Layup line", hue: "wood-walnut", ratio: "aspect-square", overlay: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent 40%)" },
-  { id: 12, cat: "Installations", title: "Duplex Stairwell", place: "Bhilai", hue: "wood-wenge", ratio: "aspect-[3/4]", overlay: "radial-gradient(50% 60% at 60% 50%, rgba(232,168,96,0.12), transparent 70%)" },
-];
-
-function Tile({ item, onOpen }: { item: Item; onOpen: () => void }) {
-  return (
-    <motion.button
-      layoutId={`tile-${item.id}`}
-      onClick={onOpen}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "group relative mb-5 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-champagne/10 text-left",
-        item.ratio
-      )}
-      data-cursor
-    >
-      <div
-        className={cn("wood absolute inset-0 transition-transform duration-[1.4s] ease-out group-hover:scale-110", item.hue)}
-      />
-      <div className="absolute inset-0" style={{ background: item.overlay }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-transparent to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
-        <div>
-          <div className="text-[0.6rem] uppercase tracking-[0.2em] text-copper-bright">{item.cat}</div>
-          <div className="mt-0.5 font-serif text-base text-ivory">{item.title}</div>
-        </div>
-        <ZoomIn size={15} className="mb-1 text-ivory-dim opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </div>
-    </motion.button>
-  );
-}
+import {
+  shots,
+  galleryCategories as categories,
+  type GalleryCategory as Category,
+  type Shot,
+} from "@/lib/gallery";
 
 export default function Gallery() {
   const [cat, setCat] = useState<Category>("All");
-  const [openItem, setOpenItem] = useState<Item | null>(null);
-  const visible = items.filter((i) => cat === "All" || i.cat === cat);
+  const [open, setOpen] = useState<Shot | null>(null);
+
+  const visible = shots.filter((s) => cat === "All" || s.cat === cat);
 
   return (
     <section id="gallery" className="relative scroll-mt-20 py-28 lg:py-36">
@@ -78,7 +27,7 @@ export default function Gallery() {
         </Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <h2 className="max-w-xl font-serif text-[clamp(2rem,4.5vw,3.4rem)] leading-tight text-ivory">
-            <SplitText text="Grain, up close." />
+            <SplitText text="Inside the works." />
           </h2>
           <div className="flex flex-wrap gap-2">
             {categories.map((c) => (
@@ -98,47 +47,86 @@ export default function Gallery() {
           </div>
         </div>
 
-        <div className="mt-12 columns-2 gap-5 md:columns-3 lg:columns-4">
-          <AnimatePresence mode="popLayout">
-            {visible.map((item) => (
-              <Tile key={item.id} item={item} onOpen={() => setOpenItem(item)} />
-            ))}
-          </AnimatePresence>
+        {/* Masonry — photos keep their natural aspect ratio */}
+        <div className="mt-12 columns-1 gap-5 sm:columns-2 lg:columns-3">
+          {visible.map((s, i) => (
+            <motion.button
+              key={s.src}
+              onClick={() => setOpen(s)}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.7, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative mb-5 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-champagne/10 text-left"
+              data-cursor
+            >
+              <Image
+                src={s.src}
+                alt={`${s.title} — ${s.caption}`}
+                width={s.w}
+                height={s.h}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="h-auto w-full transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
+              />
+              {/* keeps the tile in key with the dark page, lifts on hover */}
+              <div className="pointer-events-none absolute inset-0 bg-walnut-950/25 transition-opacity duration-500 group-hover:opacity-0" />
+              {/* step number, kept clear of the photo's own caption (bottom-left) */}
+              <div className="pointer-events-none absolute right-3 top-3 flex items-center gap-2">
+                <span className="rounded-full bg-walnut-950/70 px-2.5 py-1 font-serif text-[0.7rem] text-copper-bright backdrop-blur-sm">
+                  {String(shots.indexOf(s) + 1).padStart(2, "0")}
+                </span>
+                <ZoomIn
+                  size={14}
+                  className="text-ivory opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              </div>
+            </motion.button>
+          ))}
         </div>
       </div>
 
-      {/* Fullscreen lightbox */}
+      {/* Fullscreen preview */}
       <AnimatePresence>
-        {openItem && (
+        {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[85] flex items-center justify-center bg-walnut-950/92 p-6 backdrop-blur-xl"
-            onClick={() => setOpenItem(null)}
+            className="fixed inset-0 z-[85] flex items-center justify-center bg-walnut-950/94 p-4 backdrop-blur-xl sm:p-8"
+            onClick={() => setOpen(null)}
           >
-            <motion.div
-              layoutId={`tile-${openItem.id}`}
-              className="relative max-h-[85vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-champagne/15"
+            <motion.figure
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="relative max-h-full w-full max-w-5xl overflow-hidden rounded-2xl border border-champagne/15"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className={cn("wood h-[70vh] w-full", openItem.hue)} />
-              <div className="absolute inset-0" style={{ background: openItem.overlay }} />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-walnut-950/95 to-transparent p-7">
-                <div className="text-[0.62rem] uppercase tracking-[0.22em] text-copper-bright">
-                  {openItem.cat}
-                </div>
-                <div className="mt-1 font-serif text-2xl text-ivory">{openItem.title}</div>
-                <div className="mt-0.5 text-xs text-ivory-dim">{openItem.place}</div>
-              </div>
+              {/* caption sits at the top — the photo carries its own at bottom-left */}
+              <figcaption className="absolute inset-x-0 top-0 z-10 flex items-center gap-3 bg-gradient-to-b from-walnut-950/90 to-transparent px-5 py-4">
+                <span className="font-serif text-sm text-copper-bright">
+                  {String(shots.indexOf(open) + 1).padStart(2, "0")}
+                </span>
+                <span className="text-sm text-ivory">{open.title}</span>
+                <span className="hidden text-xs text-ivory-dim sm:inline">· {open.caption}</span>
+              </figcaption>
+              <Image
+                src={open.src}
+                alt={`${open.title} — ${open.caption}`}
+                width={open.w}
+                height={open.h}
+                sizes="100vw"
+                className="max-h-[85vh] w-full object-contain"
+              />
               <button
-                onClick={() => setOpenItem(null)}
+                onClick={() => setOpen(null)}
                 aria-label="Close preview"
-                className="glass absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-ivory"
+                className="glass absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full text-ivory"
               >
                 <X size={16} />
               </button>
-            </motion.div>
+            </motion.figure>
           </motion.div>
         )}
       </AnimatePresence>

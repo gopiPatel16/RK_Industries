@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 
 /**
- * Radha Krishna concierge — a client-side product assistant.
+ * वanWood concierge — a client-side product assistant.
  * Keyword-matched answers built from the site config + product knowledge,
  * with WhatsApp/call fallbacks. No backend required (works static on Vercel).
  * Swap `reply()` for a server route + LLM later if a live AI is wanted.
@@ -21,6 +21,9 @@ const waHref = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
 )}`;
 const telHref = `tel:${site.phone.replace(/\s/g, "")}`;
 const inr = new Intl.NumberFormat("en-IN");
+
+/** Small jitter so replies do not feel machine-timed. */
+const replyDelay = () => 460 + Math.random() * 280;
 
 const QUICK = [
   "Your products",
@@ -121,7 +124,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
 
   if (has("deliver", "ship", "dispatch", "transport", "courier", "supply"))
     return {
-      text: `We dispatch across ${site.stats.cities}+ cities through ${site.stats.dealers}+ dealer partners. Share your city and we'll point you to the nearest one.`,
+      text: `We dispatch across ${site.stats.cities}+ cities through ${site.stats.customers}+ customers. Share your city and we'll point you to the nearest one.`,
       actions: [{ label: "WhatsApp us", kind: "wa" }],
     };
 
@@ -171,7 +174,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
     return {
       text: `${site.shortName} Industries has crafted flush doors and plywood in Birgaon, Raipur for ${site.stats.years} years — ${inr.format(
         site.stats.doors
-      )}+ doors made, ${site.stats.dealers}+ dealers, ${site.stats.cities}+ cities.`,
+      )}+ doors made, ${site.stats.customers}+ customers, ${site.stats.cities}+ cities.`,
       actions: [{ label: "Our story", kind: "scroll", target: "#about" }],
     };
 
@@ -221,7 +224,7 @@ export default function Assistant({
     } else if (a.kind === "wa") {
       window.open(waHref, "_blank", "noopener");
     } else if (a.kind === "call") {
-      window.location.href = telHref;
+      window.location.assign(telHref);
     }
   };
 
@@ -238,7 +241,7 @@ export default function Assistant({
         { id: idRef.current++, role: "bot", text: r.text, actions: r.actions },
       ]);
       setTyping(false);
-    }, 460 + Math.random() * 280);
+    }, replyDelay());
   };
 
   return (

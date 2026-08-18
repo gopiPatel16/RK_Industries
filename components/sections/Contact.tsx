@@ -12,14 +12,12 @@ const inputCls =
   "w-full rounded-xl border border-champagne/15 bg-walnut-900/50 px-4 py-3 text-sm text-ivory placeholder:text-ivory-dim/50 outline-none transition-colors focus:border-copper";
 
 export default function Contact() {
-  const [kind, setKind] = useState<"product" | "dealer">("product");
   const [sent, setSent] = useState(false);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const body = [
-      `Enquiry type: ${kind === "dealer" ? "Dealer partnership" : "Product enquiry"}`,
       `Name: ${data.get("name")}`,
       `Phone: ${data.get("phone")}`,
       `City: ${data.get("city")}`,
@@ -29,7 +27,7 @@ export default function Contact() {
     ].join("\n");
     window.open(
       `mailto:${site.email}?subject=${encodeURIComponent(
-        `${kind === "dealer" ? "Dealer" : "Quote"} enquiry — ${data.get("name")}`
+        `Enquiry — ${data.get("name")}`
       )}&body=${encodeURIComponent(body)}`
     );
     setSent(true);
@@ -48,30 +46,6 @@ export default function Contact() {
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.15fr_1fr]">
           {/* ── Form ── */}
           <Reveal className="glass reflect rounded-[1.75rem] p-7 md:p-9">
-            {/* Enquiry type toggle */}
-            <div className="mb-7 inline-flex rounded-full border border-champagne/15 p-1">
-              {(
-                [
-                  ["product", "Product Enquiry"],
-                  ["dealer", "Dealer Partnership"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setKind(id)}
-                  className={cn(
-                    "rounded-full px-5 py-2 text-[0.75rem] font-semibold transition-all duration-300",
-                    kind === id
-                      ? "bg-gradient-to-r from-copper-bright to-copper text-walnut-950 shadow-[0_4px_16px_rgba(201,138,75,0.35)]"
-                      : "text-ivory-dim hover:text-ivory"
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
             <AnimatePresence mode="wait">
               {sent ? (
                 <motion.div
@@ -116,11 +90,7 @@ export default function Contact() {
                   <textarea
                     name="message"
                     rows={4}
-                    placeholder={
-                      kind === "dealer"
-                        ? "Tell us about your business — location, current brands, monthly volume…"
-                        : "Tell us about your project — sizes, quantity, finish…"
-                    }
+                    placeholder="Tell us about your project — sizes, quantity, finish…"
                     className={cn(inputCls, "sm:col-span-2")}
                   />
                   <div className="sm:col-span-2">
