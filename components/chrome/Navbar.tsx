@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Mail, MapPin, Clock } from "lucide-react";
-import { InstagramIcon, FacebookIcon, LinkedinIcon, YoutubeIcon } from "@/components/fx/SocialIcons";
+import { InstagramIcon, FacebookIcon } from "@/components/fx/SocialIcons";
 import { site, nav } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
@@ -68,8 +68,6 @@ export default function Navbar() {
               [
                 [InstagramIcon, site.socials.instagram, "Instagram"],
                 [FacebookIcon, site.socials.facebook, "Facebook"],
-                [LinkedinIcon, site.socials.linkedin, "LinkedIn"],
-                [YoutubeIcon, site.socials.youtube, "YouTube"],
               ] as const
             ).map(([Icon, href, label], i) => (
               <a
@@ -109,7 +107,7 @@ export default function Navbar() {
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
             {nav.map((item) => (
               <button
-                key={item.href}
+                key={item.label}
                 onClick={() => go(item.href)}
                 className={cn(
                   "nav-link text-[0.8rem] font-medium tracking-wide text-ivory-dim transition-colors hover:text-ivory",
@@ -157,7 +155,7 @@ export default function Navbar() {
             <nav className="flex flex-1 flex-col justify-center gap-1 px-8" aria-label="Mobile">
               {nav.map((item, i) => (
                 <motion.button
-                  key={item.href}
+                  key={item.label}
                   initial={{ opacity: 0, x: -24 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { InstagramIcon, FacebookIcon, LinkedinIcon, YoutubeIcon } from "@/components/fx/SocialIcons";
+import { InstagramIcon, FacebookIcon } from "@/components/fx/SocialIcons";
 import { site, nav } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 
@@ -12,6 +12,9 @@ export default function Footer() {
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr] lg:gap-20">
         <div>
           <div className="font-serif text-3xl text-champagne">{site.name}</div>
+          <div className="mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ivory-dim">
+            By Radha Krishna Industries
+          </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-ivory-dim">
             {site.sub} Proudly manufactured in {site.shortAddress}.
           </p>
@@ -20,8 +23,6 @@ export default function Footer() {
               [
                 [InstagramIcon, site.socials.instagram, "Instagram"],
                 [FacebookIcon, site.socials.facebook, "Facebook"],
-                [LinkedinIcon, site.socials.linkedin, "LinkedIn"],
-                [YoutubeIcon, site.socials.youtube, "YouTube"],
               ] as const
             ).map(([Icon, href, label], i) => (
               <a
@@ -42,7 +43,7 @@ export default function Footer() {
           <div className="eyebrow mb-5">Explore</div>
           <ul className="space-y-2.5">
             {nav.map((n) => (
-              <li key={n.href}>
+              <li key={n.label}>
                 <button
                   onClick={() => scrollToSection(n.href)}
                   className="text-sm text-ivory-dim transition-colors hover:text-copper-bright"

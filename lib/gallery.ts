@@ -1,14 +1,12 @@
 /**
- * ── FACTORY PHOTOGRAPHS ──────────────────────────────────────
- * The floor in the order the door is actually made. Shared by the
- * Gallery grid and the Factory carousel so the two can never drift.
+ * ── THE PROCESS, IN ORDER ────────────────────────────────────
+ * The eleven stations a वanWood door passes through, shared by the Gallery
+ * grid and the Factory carousel so the two can never drift.
  *
- * To add the missing stations (hot press, sanding machine): drop the
- * file in `public/gallery/` and insert an entry at the right position —
- * step numbers are derived from array order and renumber themselves.
- *
- * Note: each photograph carries its own burnt-in caption at bottom-left,
- * so overlays deliberately stay clear of that corner.
+ * Step 07 (hot pressing) has no photograph yet — it carries `src: null` and
+ * renders as a captioned placeholder rather than being skipped, so the
+ * numbering matches the real floor. Drop the photo in `public/process/`, set
+ * `src` and its `w`/`h`, and the placeholder disappears.
  */
 export const galleryCategories = [
   "All",
@@ -21,7 +19,8 @@ export const galleryCategories = [
 export type GalleryCategory = (typeof galleryCategories)[number];
 
 export type Shot = {
-  src: string;
+  /** null while the station is still awaiting a photograph. */
+  src: string | null;
   w: number;
   h: number;
   title: string;
@@ -37,102 +36,91 @@ export type Shot = {
 
 export const shots: Shot[] = [
   {
-    src: "/gallery/01-planks.jpg",
-    w: 1600,
-    h: 911,
-    title: "Planks",
-    caption: "Raw hardwood planks arriving at the yard.",
+    src: "/process/p01-collecting-planks.jpg",
+    w: 1280,
+    h: 729,
+    title: "Collecting Planks",
+    caption: "Raw hardwood planks gathered and graded at the yard.",
     cat: "Raw Material",
   },
   {
-    src: "/gallery/02-veneer-sheet.jpg",
-    station: false,
-    w: 1450,
-    h: 1085,
-    title: "Veneer Sheet",
-    caption: "Hand-matched natural veneer, stacked and ready.",
+    src: "/process/p02-drying.jpg",
+    w: 1280,
+    h: 713,
+    title: "Drying Process",
+    caption: "Timber seasoned down to a stable working moisture.",
     cat: "Raw Material",
   },
   {
-    src: "/gallery/03-core-sheet.jpg",
-    station: false,
-    w: 1600,
-    h: 882,
-    title: "Core Sheet",
-    caption: "Core sheets seasoning in the open air.",
-    cat: "Raw Material",
-  },
-  {
-    src: "/gallery/04-wood-drying.jpg",
-    w: 1600,
-    h: 889,
-    title: "Wood Drying",
-    caption: "The seasoning chamber — timber dried to under 12% moisture.",
-    cat: "Raw Material",
-  },
-  {
-    src: "/gallery/05-raw-material-cutting.jpg",
-    w: 1319,
-    h: 1192,
-    title: "Raw Material Cutting",
-    caption: "Planks broken down to working sizes.",
+    src: "/process/p03-smoothening.jpg",
+    w: 1280,
+    h: 734,
+    title: "Smoothening Process",
+    caption: "Every face planed true and smooth before it is cut.",
     cat: "Machining",
   },
   {
-    src: "/gallery/06-randha-machine.jpg",
-    w: 1600,
-    h: 918,
-    title: "Randha Machine",
-    caption: "Planing every face to a smooth, true surface.",
+    src: "/process/p04-wood-cutting.jpg",
+    w: 1280,
+    h: 1149,
+    title: "Wood Cutting Process",
+    caption: "Planks broken down to exact working sizes.",
     cat: "Machining",
   },
   {
-    src: "/gallery/07-finger-jointer.jpg",
-    station: false,
-    w: 1448,
-    h: 1086,
-    title: "Finger Making & Jointer",
-    caption: "Finger joints cut for full-length, knot-free lengths.",
+    src: "/process/p05-glueing.jpg",
+    w: 1280,
+    h: 720,
+    title: "Glueing Process",
+    caption: "Resin spread edge to edge across the sheet.",
     cat: "Machining",
   },
   {
-    src: "/gallery/08-glue-spreader.jpg",
-    station: false,
-    w: 1600,
-    h: 900,
-    title: "Glue Spreader",
-    caption: "Resin rollered edge to edge across the sheet.",
-    cat: "Machining",
-  },
-  {
-    src: "/gallery/10-veneer-and-core.jpg",
-    w: 1536,
-    h: 1024,
-    title: "Veneer and Core",
-    caption: "Veneer and core stacked on the frame, ready for the press.",
+    src: "/process/p06-assembling.jpg",
+    w: 1280,
+    h: 853,
+    title: "Assembling Process",
+    caption: "Frame, core blocks and skins laid up by hand.",
     cat: "Assembly",
   },
   {
-    src: "/gallery/11-core-layering.jpg",
-    w: 1536,
-    h: 1024,
-    title: "Core Layering",
-    caption: "The frame packed with core blocks, core pieces laid over by hand.",
+    // awaiting a photograph — see the note at the top of this file
+    src: null,
+    w: 1280,
+    h: 853,
+    title: "Hot Pressing Process",
+    caption: "Photograph coming soon.",
     cat: "Assembly",
   },
   {
-    src: "/gallery/09-edge-cutting.jpg",
-    w: 1536,
-    h: 1024,
-    title: "Edge Cutting Machine",
+    src: "/process/p08-edge-cutting.jpg",
+    w: 1280,
+    h: 853,
+    title: "Edge Cutting Process",
     caption: "The pressed door trimmed dead square on the edge cutter.",
     cat: "Machining",
   },
   {
-    src: "/gallery/12-final-product.jpg",
-    w: 1536,
-    h: 1024,
-    title: "Flush Door",
+    src: "/process/p09-sanding.jpg",
+    w: 1585,
+    h: 992,
+    title: "Sanding Process",
+    caption: "Faces sanded to an even, ready-to-finish surface.",
+    cat: "Machining",
+  },
+  {
+    src: "/process/p10-dipping.jpg",
+    w: 1280,
+    h: 800,
+    title: "Dipping Process",
+    caption: "Treated against borer and damp before dispatch.",
+    cat: "Finished",
+  },
+  {
+    src: "/process/p11-final-product.jpg",
+    w: 1280,
+    h: 800,
+    title: "Final Product",
     caption: "Finished doors stacked and ready to dispatch.",
     cat: "Finished",
   },

@@ -50,8 +50,8 @@ function reply(raw: string): { text: string; actions?: Action[] } {
     return {
       text: "We craft three things: premium solid-core flush doors, BWP-grade plywood, and a third division launching soon. Which would you like to explore?",
       actions: [
-        { label: "Flush doors", kind: "scroll", target: "#doors" },
-        { label: "Plywood", kind: "scroll", target: "#plywood" },
+        { label: "Flush doors", kind: "scroll", target: "#configurator" },
+        { label: "Plywood", kind: "scroll", target: "#contact" },
       ],
     };
 
@@ -73,14 +73,14 @@ function reply(raw: string): { text: string; actions?: Action[] } {
   if (word("ply") || has("plywood"))
     return {
       text: "We make BWP-grade marine & commercial plywood — odd-ply balanced construction, phenolic (boil-proof) bonding and 100% composed cores. It shrugs off monsoon humidity and daily wear.",
-      actions: [{ label: "Explore plywood", kind: "scroll", target: "#plywood" }],
+      actions: [{ label: "Explore plywood", kind: "scroll", target: "#contact" }],
     };
 
   if (has("flush door", "door", "darwaza"))
     return {
       text: "Our flush doors are solid-core with kiln-seasoned hardwood frames, calibrated cores and hand-finished natural veneers — silent, warp-resistant and built to last generations. Finishes: walnut, teak, oak, mahogany, wengé; thickness 25–38 mm.",
       actions: [
-        { label: "Explore doors", kind: "scroll", target: "#doors" },
+        { label: "Explore doors", kind: "scroll", target: "#configurator" },
         { label: "Customise one", kind: "scroll", target: "#configurator" },
       ],
     };
@@ -119,7 +119,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
   if (has("waterproof", "bwp", "water", "monsoon", "humid", "bathroom", "kitchen"))
     return {
       text: "Our plywood is BWP (Boiling Water Proof) grade with phenolic bonding — it stays true through monsoons and wet areas like kitchens and bathrooms.",
-      actions: [{ label: "Explore plywood", kind: "scroll", target: "#plywood" }],
+      actions: [{ label: "Explore plywood", kind: "scroll", target: "#contact" }],
     };
 
   if (has("deliver", "ship", "dispatch", "transport", "courier", "supply"))
@@ -130,9 +130,9 @@ function reply(raw: string): { text: string; actions?: Action[] } {
 
   if (has("dealer", "distributor", "partner", "franchise", "wholesale", "reseller"))
     return {
-      text: "We'd love to add you to our dealer network. Send your business details and city, and our team will follow up on margins and support.",
+      text: "We'd love to add you to our customer network. Send your business details and city, and our team will follow up on rates and support.",
       actions: [
-        { label: "Dealer enquiry", kind: "scroll", target: "#contact" },
+        { label: "Customer enquiry", kind: "scroll", target: "#contact" },
         { label: "WhatsApp us", kind: "wa" },
       ],
     };
@@ -179,7 +179,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
     };
 
   return {
-    text: "I can help with our flush doors, plywood, sizes, finishes, thickness, pricing, warranty, delivery, becoming a dealer, or visiting us. For anything specific, our team is one tap away.",
+    text: "I can help with our flush doors, plywood, sizes, finishes, thickness, pricing, warranty, delivery, becoming a customer, or visiting us. For anything specific, our team is one tap away.",
     actions: [
       { label: "WhatsApp us", kind: "wa" },
       { label: "Call us", kind: "call" },

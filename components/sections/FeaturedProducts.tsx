@@ -28,7 +28,7 @@ function DoorsCard() {
   );
 }
 
-/* ── Card 2 · Plywood — exploded layer reveal ── */
+/* ── Card 2 · Plywood — exploded layer reveal, not yet on sale ── */
 const plyLayers = [
   { cls: "wood-oak", h: 10 },
   { cls: "wood-teak", h: 7 },
@@ -46,24 +46,30 @@ function PlywoodCard() {
       title="Plywood"
       kicker="Engineered Panels"
       copy="BWP-grade marine and commercial plywood — odd-ply balanced construction, phenolic bonding and 100% composed cores. Every sheet calibrated, every bond boil-proof."
-      cta="Explore Plywood"
+      cta="Notify Me"
       icon={Layers}
+      soon
     >
-      <div
-        className="mx-auto flex w-[64%] flex-col items-center justify-center gap-[3px] transition-all duration-700 [transform:rotateX(58deg)_rotateZ(-38deg)] [transform-style:preserve-3d] group-hover:gap-[14px]"
-        style={{ perspective: "900px" }}
-      >
-        {plyLayers.map((l, i) => (
-          <div
-            key={i}
-            className={`wood ${l.cls} w-full rounded-[3px] shadow-[0_8px_20px_rgba(0,0,0,0.45)] transition-transform duration-700`}
-            style={{
-              height: l.h * 2.4,
-              transform: `translateZ(${(i - 3) * 2}px)`,
-              transitionDelay: `${i * 40}ms`,
-            }}
-          />
-        ))}
+      <div className="relative mx-auto flex w-full items-center justify-center">
+        <div
+          className="flex w-[64%] flex-col items-center justify-center gap-[3px] transition-all duration-700 [transform:rotateX(58deg)_rotateZ(-38deg)] [transform-style:preserve-3d] group-hover:gap-[14px]"
+          style={{ perspective: "900px" }}
+        >
+          {plyLayers.map((l, i) => (
+            <div
+              key={i}
+              className={`wood ${l.cls} w-full rounded-[3px] shadow-[0_8px_20px_rgba(0,0,0,0.45)] transition-transform duration-700`}
+              style={{
+                height: l.h * 2.4,
+                transform: `translateZ(${(i - 3) * 2}px)`,
+                transitionDelay: `${i * 40}ms`,
+              }}
+            />
+          ))}
+        </div>
+        <div className="absolute rounded-full border border-copper/50 bg-walnut-950/80 px-3 py-1 text-[0.58rem] uppercase tracking-[0.22em] text-copper-bright backdrop-blur-sm">
+          Coming Soon
+        </div>
       </div>
     </CardShell>
   );

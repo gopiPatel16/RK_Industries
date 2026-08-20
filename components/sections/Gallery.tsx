@@ -35,7 +35,7 @@ export default function Gallery() {
                 key={c}
                 onClick={() => setCat(c)}
                 className={cn(
-                  "rounded-full border px-4 py-2 text-[0.72rem] font-medium transition-all duration-300",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-[0.72rem] font-medium transition-all duration-300",
                   cat === c
                     ? "border-copper bg-copper/15 text-copper-bright"
                     : "border-champagne/15 text-ivory-dim hover:border-champagne/35 hover:text-ivory"
@@ -51,8 +51,8 @@ export default function Gallery() {
         <div className="mt-12 columns-1 gap-5 sm:columns-2 lg:columns-3">
           {visible.map((s, i) => (
             <motion.button
-              key={s.src}
-              onClick={() => setOpen(s)}
+              key={s.title}
+              onClick={() => s.src && setOpen(s)}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -60,14 +60,26 @@ export default function Gallery() {
               className="group relative mb-5 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-champagne/10 text-left"
               data-cursor
             >
-              <Image
-                src={s.src}
-                alt={`${s.title} — ${s.caption}`}
-                width={s.w}
-                height={s.h}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="h-auto w-full transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
-              />
+              {s.src ? (
+                <Image
+                  src={s.src}
+                  alt={`${s.title} — ${s.caption}`}
+                  width={s.w}
+                  height={s.h}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="h-auto w-full transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
+                />
+              ) : (
+                /* station still awaiting its photograph — named, not skipped */
+                <div
+                  className="flex items-center justify-center bg-walnut-900/50 px-6 text-center"
+                  style={{ aspectRatio: `${s.w} / ${s.h}` }}
+                >
+                  <span className="font-serif text-xl leading-snug text-champagne/70">
+                    {s.title}
+                  </span>
+                </div>
+              )}
               {/* keeps the tile in key with the dark page, lifts on hover */}
               <div className="pointer-events-none absolute inset-0 bg-walnut-950/25 transition-opacity duration-500 group-hover:opacity-0" />
               {/* step number, kept clear of the photo's own caption (bottom-left) */}
@@ -111,14 +123,16 @@ export default function Gallery() {
                 <span className="text-sm text-ivory">{open.title}</span>
                 <span className="hidden text-xs text-ivory-dim sm:inline">· {open.caption}</span>
               </figcaption>
-              <Image
-                src={open.src}
-                alt={`${open.title} — ${open.caption}`}
-                width={open.w}
-                height={open.h}
-                sizes="100vw"
-                className="max-h-[85vh] w-full object-contain"
-              />
+              {open.src && (
+                <Image
+                  src={open.src}
+                  alt={`${open.title} — ${open.caption}`}
+                  width={open.w}
+                  height={open.h}
+                  sizes="100vw"
+                  className="max-h-[85vh] w-full object-contain"
+                />
+              )}
               <button
                 onClick={() => setOpen(null)}
                 aria-label="Close preview"

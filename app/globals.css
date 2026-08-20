@@ -34,6 +34,12 @@
 
 html {
   scroll-behavior: auto; /* Lenis owns scrolling */
+  /* GSAP's pin-spacer measures the full window width, so on desktop/tablet —
+     where a vertical scrollbar narrows the content box — a pinned section sits
+     a scrollbar's width past the edge and the page drifts sideways. `clip`
+     contains it without creating a scroll container, so pinning and sticky
+     both keep working. */
+  overflow-x: clip;
 }
 
 .lenis.lenis-smooth {

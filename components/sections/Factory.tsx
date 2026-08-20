@@ -137,21 +137,32 @@ export default function Factory() {
           >
             {stations.map((s, i) => (
               <article
-                key={s.src}
+                key={s.title}
                 aria-hidden={i < clamped || i >= clamped + perView}
                 className="relative shrink-0 overflow-hidden rounded-[1.5rem] border border-champagne/10"
                 style={{ width: `calc((100% - ${(perView - 1) * GAP_PX}px) / ${perView})` }}
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <Image
-                    src={s.src}
-                    alt={`${s.title} — ${s.caption}`}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover"
-                  />
-                  {/* keeps the photo's own burnt-in caption legible */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-walnut-950/10 to-transparent" />
+                  {s.src ? (
+                    <>
+                      <Image
+                        src={s.src}
+                        alt={`${s.title} — ${s.caption}`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                      {/* keeps the photo's own burnt-in caption legible */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-walnut-950/10 to-transparent" />
+                    </>
+                  ) : (
+                    /* station still awaiting its photograph — named, not skipped */
+                    <div className="absolute inset-0 flex items-center justify-center bg-walnut-900/50 px-6 text-center">
+                      <span className="font-serif text-xl leading-snug text-champagne/70">
+                        {s.title}
+                      </span>
+                    </div>
+                  )}
                   <span className="absolute right-4 top-4 rounded-full bg-walnut-950/70 px-2.5 py-1 font-serif text-[0.7rem] text-copper-bright backdrop-blur-sm">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -170,18 +181,26 @@ export default function Factory() {
           </div>
         </div>
 
-        {/* ── Progress rail ── */}
-        <div className="mt-8 flex items-center gap-1.5">
+        {/* ── Progress rail ──
+             The bar itself stays 4px, but each button carries vertical padding
+             so there is a finger-sized target around it on touch screens. */}
+        <div className="mt-6 flex items-center gap-1.5">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
               onClick={() => setIndex(i)}
               aria-label={`Go to station ${i + 1}`}
-              className={cn(
-                "h-1 rounded-full transition-all duration-500",
-                i === clamped ? "w-10 bg-copper-bright" : "w-5 bg-champagne/15 hover:bg-champagne/30"
-              )}
-            />
+              className="group/dot flex h-11 items-center px-0.5"
+            >
+              <span
+                className={cn(
+                  "block h-1 rounded-full transition-all duration-500",
+                  i === clamped
+                    ? "w-10 bg-copper-bright"
+                    : "w-5 bg-champagne/15 group-hover/dot:bg-champagne/30"
+                )}
+              />
+            </button>
           ))}
         </div>
       </div>

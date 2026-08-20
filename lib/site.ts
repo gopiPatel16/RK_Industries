@@ -37,8 +37,8 @@ export const site = {
 export const nav = [
   { label: "Home", href: "#home" },
   { label: "About Us", href: "#about" },
-  { label: "Flush Doors", href: "#doors" },
-  { label: "Plywood", href: "#plywood" },
+  { label: "Flush Doors", href: "#configurator" },
+  { label: "Plywood", href: "#contact" },
   { label: "Process", href: "#process" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },

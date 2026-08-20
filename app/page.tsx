@@ -6,7 +6,6 @@ import Navbar from "@/components/chrome/Navbar";
 import Dock from "@/components/chrome/Dock";
 import Footer from "@/components/chrome/Footer";
 import Hero from "@/components/sections/Hero";
-import FeaturedProducts from "@/components/sections/FeaturedProducts";
 import About from "@/components/sections/About";
 import DoorExperience from "@/components/sections/DoorExperience";
 import Process from "@/components/sections/Process";
@@ -26,7 +25,6 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <FeaturedProducts />
         <About />
         <DoorExperience />
         <Process />

@@ -10,27 +10,22 @@ import {
   useScroll,
   type MotionValue,
 } from "framer-motion";
-import { Play } from "lucide-react";
-import { site } from "@/lib/site";
-import { scrollToSection } from "@/lib/lenis";
 import { currentTheme } from "@/lib/hero-theme";
 import DoorVisual from "@/components/door/DoorVisual";
-import Magnetic from "@/components/fx/Magnetic";
 import Dust from "@/components/fx/Dust";
-import { cn } from "@/lib/utils";
 
 /**
  * Homepage hero with two switchable visual themes (see lib/hero-theme.ts):
- *  "artisan"        — THE ARTISAN WORKSHOP: the photographed workshop
- *                     (public/images/hero-workshop.jpg) as a full-screen
- *                     backdrop; spotlight flicker, dust, door glow + hover.
+ *  "artisan"        — THE ARTISAN WORKSHOP: the interior photograph
+ *                     (public/images/hero-interior-v5.jpg) shown full-screen and
+ *                     uncovered, with drifting dust over it.
  *  "luxury-gallery" — LUXURY PRODUCT GALLERY: dark showroom gradient, a
  *                     glowing golden halo behind the CSS door, drifting
  *                     smoke, idle door rotation.
- * The content block (text, buttons, timings) is shared and untouched.
+ * The photograph carries its own headline and callouts, so no copy is laid
+ * over it — see the note in the markup.
  */
 
-const GOLD = "#D4A15A";
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
 type SceneProps = {
@@ -38,30 +33,6 @@ type SceneProps = {
   sy: MotionValue<number>;
   sceneY: MotionValue<number>;
 };
-
-/** One masked headline line rising into view. */
-function Line({
-  children,
-  delay,
-  className,
-}: {
-  children: React.ReactNode;
-  delay: number;
-  className?: string;
-}) {
-  return (
-    <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-      <motion.span
-        className={cn("block will-change-transform", className)}
-        initial={{ y: "112%" }}
-        animate={{ y: "0%" }}
-        transition={{ duration: 1, delay, ease: easeOut }}
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
 
 /* ════════════════════════════════════════════════════════════
    THEME 1 · THE ARTISAN WORKSHOP — photo backdrop
@@ -76,78 +47,39 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
       className="pointer-events-none absolute inset-0"
       aria-hidden
     >
-      {/* The workshop photograph — over-scaled so parallax never shows edges */}
+      {/*
+        The photograph is a 3:2 banner carrying its own product callouts, so how
+        it is fitted has to change with the viewport:
+          · narrow/portrait screens — `contain`, so the whole composition and
+            all three callouts stay readable instead of being sliced apart;
+          · lg and wider, where the viewport is finally wider than 3:2 —
+            `cover`, which fills the screen while still showing the full width.
+        Over-scaled by 3% so the parallax drift never exposes an edge.
+      */}
       <motion.div
         className="absolute inset-[-3%]"
         style={{ x: bgX, y: bgY }}
-        initial={{ opacity: 0, scale: 1.09 }}
-        animate={{ opacity: 1, scale: 1.03 }}
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 2.2, duration: 2.4, ease: easeOut }}
       >
         <Image
-          src="/images/hero-workshop.jpg"
+          src="/images/hero-interior-v5.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[68%_center]"
+          className="object-contain object-center lg:object-cover lg:object-[62%_center]"
         />
       </motion.div>
 
-      {/* Readability overlay — left kept clean for the text */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(10,7,5,0.72) 0%, rgba(10,7,5,0.30) 50%, rgba(10,7,5,0.14) 72%, rgba(10,7,5,0.40) 100%)",
-        }}
-      />
+      {/* Only enough shading to seat the navbar — the photograph carries the hero */}
       <div
         className="absolute inset-x-0 top-0 h-28"
         style={{
-          background: "linear-gradient(180deg, rgba(10,7,5,0.8), transparent)",
+          background: "linear-gradient(180deg, rgba(10,7,5,0.55), transparent)",
         }}
       />
-
-      {/* Spotlight — flickers on over the photo's beam, then breathes */}
-      <motion.div
-        className="absolute left-[73%] top-[4%] h-[74%] w-[38%] -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.6, 0.25, 0.9, 0.7, 1] }}
-        transition={{
-          delay: 2.5,
-          duration: 1.6,
-          times: [0, 0.2, 0.35, 0.6, 0.8, 1],
-        }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(50% 58% at 50% 18%, rgba(255,208,140,0.18), transparent 72%)",
-            filter: "blur(6px)",
-            animation: "pulseGlow 7s ease-in-out infinite",
-          }}
-        />
-      </motion.div>
-
-      {/* The photo's door — golden glow, subtle movement on hover */}
-      <motion.div
-        className="group pointer-events-auto absolute left-[64%] top-[20%] h-[60%] w-[19%]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3, duration: 1.4 }}
-        whileHover={{ y: -5 }}
-      >
-        <div
-          className="absolute inset-[-22%] rounded-[50%] opacity-55 transition-opacity duration-700 group-hover:opacity-100"
-          style={{
-            background:
-              "radial-gradient(50% 50% at 50% 55%, rgba(212,161,90,0.22), transparent 70%)",
-            filter: "blur(16px)",
-          }}
-        />
-      </motion.div>
 
       {/* Floating wood dust */}
       <Dust count={18} />
@@ -157,7 +89,7 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 95% at 55% 40%, transparent 55%, rgba(4,2,1,0.7) 100%)",
+            "radial-gradient(125% 100% at 50% 45%, transparent 68%, rgba(4,2,1,0.42) 100%)",
         }}
       />
     </motion.div>
@@ -381,15 +313,15 @@ export default function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -90]);
   const sceneY = useTransform(scrollYProgress, [0, 1], [0, 70]);
-  const contentFade = useTransform(scrollYProgress, [0, 0.65], [1, 0.15]);
 
   return (
     <section
       id="home"
       ref={ref}
-      className="noise relative min-h-svh overflow-hidden bg-[#0A0705]"
+      /* shorter on phones/tablets, where the banner is letterboxed rather than
+         filling the screen, so it doesn't float in a sea of empty dark */
+      className="noise relative min-h-[58svh] overflow-hidden bg-[#0A0705] sm:min-h-[66svh] lg:min-h-svh"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
@@ -403,91 +335,11 @@ export default function Hero() {
         <ArtisanScene sx={sx} sy={sy} sceneY={sceneY} />
       )}
 
-      {/* Legibility scrim behind the content block */}
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[78%] lg:w-[58%]"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(10,7,5,0.88) 0%, rgba(10,7,5,0.45) 55%, transparent 100%)",
-        }}
-        aria-hidden
-      />
-
-      {/* ════ CONTENT ════ */}
-      <motion.div
-        style={{ y: contentY, opacity: contentFade }}
-        className="pointer-events-none relative z-20 mx-auto flex min-h-svh w-full max-w-7xl flex-col justify-center px-6 pb-16 pt-28 lg:pt-24"
-      >
-        <div className="pointer-events-auto max-w-xl">
-          <motion.div
-            className="mb-7 text-[0.68rem] font-semibold tracking-[0.38em]"
-            style={{ color: GOLD }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.9, duration: 0.9, ease: easeOut }}
-          >
-            BIRGAON &bull; RAIPUR &bull; SINCE{" "}
-            {new Date().getFullYear() - site.stats.years}
-          </motion.div>
-
-          <h1 className="font-serif text-[clamp(2.4rem,5.4vw,4.3rem)] uppercase leading-[1.08] tracking-[0.03em] text-ivory">
-            <Line delay={3.0}>Crafting</Line>
-            <Line delay={3.14}>Entrances</Line>
-            <Line delay={3.28}>That Last</Line>
-            <Line delay={3.42} className="text-[#D4A15A]">
-              Generations.
-            </Line>
-          </h1>
-
-          <motion.p
-            className="mt-7 max-w-md text-[0.95rem] leading-relaxed text-ivory-dim"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.65, duration: 1, ease: easeOut }}
-          >
-            {site.sub}
-          </motion.p>
-
-          <motion.div
-            className="mt-10 flex flex-wrap items-center gap-7"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.85, duration: 1, ease: easeOut }}
-          >
-            <Magnetic>
-              <button
-                onClick={() => scrollToSection("#doors")}
-                className="btn-primary"
-              >
-                Explore Products
-              </button>
-            </Magnetic>
-            <Magnetic strength={0.25}>
-              <button
-                onClick={() => scrollToSection("#factory")}
-                className="group flex items-center gap-3.5"
-                aria-label="Watch our story"
-              >
-                <span
-                  className="flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(212,161,90,0.45)]"
-                  style={{
-                    borderColor: "rgba(212,161,90,0.45)",
-                    background: "rgba(212,161,90,0.06)",
-                  }}
-                >
-                  <Play
-                    size={13}
-                    className="ml-0.5 fill-[#D4A15A] text-[#D4A15A]"
-                  />
-                </span>
-                <span className="text-sm font-medium tracking-wide text-ivory-dim transition-colors duration-500 group-hover:text-ivory">
-                  Watch Our Story
-                </span>
-              </button>
-            </Magnetic>
-          </motion.div>
-        </div>
-      </motion.div>
+      {/*
+        No overlaid copy: the photograph is a finished piece of artwork with its
+        own headline and product callouts, so anything laid on top collides with
+        it. The navbar's "Request a Quote" carries the call to action.
+      */}
 
       {/* Blend into the next (walnut) section */}
       <div

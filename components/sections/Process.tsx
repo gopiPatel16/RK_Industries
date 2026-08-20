@@ -1,8 +1,10 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
+import { lenisRef } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -108,6 +110,61 @@ function CoreLayer({ face }: { face: "back" | "front" }) {
  */
 export default function Process() {
   const root = useRef<HTMLElement>(null);
+  const pinST = useRef<ScrollTrigger | null>(null);
+
+  const [goingUp, setGoingUp] = useState(false);
+
+  /**
+   * Which way the reader is travelling. Taken from wheel and touch input rather
+   * than scroll position: smooth scrolling keeps driving the page after the
+   * gesture ends, so scroll events report the animation, not the intent.
+   */
+  useEffect(() => {
+    const setDir = (up: boolean) => setGoingUp((was) => (was === up ? was : up));
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 1) setDir(e.deltaY < 0);
+    };
+    let touchY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0].clientY;
+      if (Math.abs(y - touchY) > 4) {
+        setDir(y > touchY); // finger moving down drags the page upward
+        touchY = y;
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") setDir(true);
+      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === "End") setDir(false);
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  /**
+   * Leave the pinned sequence in whichever direction the reader is already
+   * heading — past the pin release going down, back before its start going up.
+   * Someone who has watched the eight phases once shouldn't have to scrub
+   * through them again in either direction.
+   */
+  const skipSection = () => {
+    const st = pinST.current;
+    const start = st ? st.start : (root.current?.offsetTop ?? 0);
+    const end = st ? st.end : start + 5600;
+    const target = goingUp ? Math.max(start - 2, 0) : end + 2;
+    if (lenisRef.current) lenisRef.current.scrollTo(target, { duration: 1.1 });
+    else window.scrollTo({ top: target, behavior: "smooth" });
+  };
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -139,6 +196,7 @@ export default function Process() {
           anticipatePin: 1,
         },
       });
+      pinST.current = tl.scrollTrigger ?? null;
 
       /** Retire the previous caption, bring in this one. */
       const caption = (i: number) => {
@@ -354,6 +412,19 @@ export default function Process() {
           </div>
         </div>
       </div>
+
+      {/* Skip — for the second visit, when the sequence has already been seen */}
+      <button
+        onClick={skipSection}
+        className="group absolute bottom-7 left-6 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-champagne/20 bg-walnut-950/60 px-4 py-2 text-[0.72rem] font-semibold text-ivory-dim backdrop-blur-sm transition-colors hover:border-copper hover:text-copper-bright lg:bottom-8"
+      >
+        Skip this section
+        {goingUp ? (
+          <ChevronsUp size={14} className="transition-transform group-hover:-translate-y-0.5" />
+        ) : (
+          <ChevronsDown size={14} className="transition-transform group-hover:translate-y-0.5" />
+        )}
+      </button>
 
       {/* step progress rail */}
       <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2">

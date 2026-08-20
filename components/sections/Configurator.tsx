@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { CheckCircle2, Loader2, Plus, X } from "lucide-react";
 import { Reveal, SplitText } from "@/components/fx/Reveal";
-import type { QuotePayload } from "@/lib/quote";
+import { formatQuote, type QuotePayload } from "@/lib/quote";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -23,10 +23,15 @@ import { cn } from "@/lib/utils";
  */
 type Wood = "hard" | "pine";
 type Frame = "hard" | "pine";
-type Unit = "ft" | "mm";
 
-/** One size line in the quotation. */
-type Line = { id: number; width: string; height: string; unit: Unit; qty: string };
+/** One line in the quotation — size in inches, thickness in millimetres. */
+type Line = {
+  id: number;
+  width: string;
+  height: string;
+  thickness: string;
+  qty: string;
+};
 
 const woods: { id: Wood; label: string }[] = [
   { id: "hard", label: "Hard Wood" },
@@ -46,7 +51,8 @@ function productOf(wood: Wood, frame: Frame): string | null {
   return null; // pine leaf on a hardwood frame is not made
 }
 
-const lineLabel = (l: Line) => `${l.width} × ${l.height} ${l.unit} — ${l.qty} nos`;
+const lineLabel = (l: Line) =>
+  `${l.width} × ${l.height} in · ${l.thickness} mm thick — ${l.qty} nos`;
 
 type SendState = "idle" | "sending" | "sent" | "error";
 
@@ -102,7 +108,7 @@ export default function Configurator() {
   // pending size line
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
-  const [unit, setUnit] = useState<Unit>("ft");
+  const [thickness, setThickness] = useState("");
   const [qty, setQty] = useState("");
 
   const [lines, setLines] = useState<Line[]>([]);
@@ -113,21 +119,25 @@ export default function Configurator() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
+  const widthRef = useRef<HTMLInputElement>(null);
 
   const [state, setState] = useState<SendState>("idle");
   const [error, setError] = useState("");
+  /** How the order actually reached the works — the confirmation copy differs. */
+  const [via, setVia] = useState<"server" | "whatsapp">("server");
 
   const product = productOf(wood, frame);
-  const pendingReady = Boolean(width && height && qty);
+  const pendingReady = Boolean(width && height && thickness && qty);
 
   /** Commit the pending inputs as a size line. Returns the resulting list. */
   const commitPending = (): Line[] => {
     if (!pendingReady) return lines;
-    const line: Line = { id: nextId.current++, width, height, unit, qty };
+    const line: Line = { id: nextId.current++, width, height, thickness, qty };
     const next = [...lines, line];
     setLines(next);
     setWidth("");
     setHeight("");
+    setThickness("");
     setQty("");
     return next;
   };
@@ -135,24 +145,47 @@ export default function Configurator() {
   const removeLine = (id: number) => setLines((ls) => ls.filter((l) => l.id !== id));
 
   const totalDoors = lines.reduce((n, l) => n + (parseInt(l.qty, 10) || 0), 0);
-  const canQuote = Boolean(product) && (lines.length > 0 || pendingReady);
-  const canSend = canQuote && name.trim().length > 1 && phone.replace(/\D/g, "").length >= 10;
+  const hasSize = lines.length > 0 || pendingReady;
+  const detailsOk = name.trim().length > 1 && phone.replace(/\D/g, "").length >= 10;
 
   /**
-   * The one button. First press banks any pending size and asks who's
-   * enquiring; once the name and number are in, it sends — server-side, so no
-   * WhatsApp window opens and the visitor stays on the page.
+   * The one button. It never greys out — a dead button tells the visitor
+   * nothing — so each press either advances the flow or says exactly what is
+   * missing and puts the cursor there. First press banks any pending size and
+   * asks who's enquiring; the next one sends, server-side, so no WhatsApp
+   * window opens and the visitor stays on the page.
    */
   const handleQuote = async () => {
-    if (!canQuote || !product) return;
+    if (state === "sending") return;
+    setState("idle");
+
+    if (!product) {
+      setError("We don't build a Pine Wood with a hard wood frame — pick another pairing.");
+      setState("error");
+      return;
+    }
+    if (!hasSize) {
+      setError(
+        "Add a size first — width and height in inches, thickness in mm, and how many doors."
+      );
+      setState("error");
+      widthRef.current?.focus();
+      return;
+    }
 
     if (!askDetails) {
       commitPending();
       setAskDetails(true);
+      setError("");
       setTimeout(() => nameRef.current?.focus(), 120);
       return;
     }
-    if (!canSend || state === "sending") return;
+    if (!detailsOk) {
+      setError("Please enter your name and a phone number of at least 10 digits.");
+      setState("error");
+      nameRef.current?.focus();
+      return;
+    }
 
     const all = commitPending();
     const payload: QuotePayload = {
@@ -161,11 +194,32 @@ export default function Configurator() {
       product,
       wood: woods.find((w) => w.id === wood)!.label,
       frame: frames.find((f) => f.id === frame)!.label,
-      lines: all.map(({ width, height, unit, qty }) => ({ width, height, unit, qty })),
+      lines: all.map(({ width, height, thickness, qty }) => ({
+        width,
+        height,
+        thickness,
+        qty,
+      })),
     };
 
     setState("sending");
     setError("");
+
+    /**
+     * Fallback delivery: open WhatsApp with the order already written out and
+     * addressed to the works. Used whenever the server-side send is unavailable,
+     * so the button always ends with the order reaching the admin's WhatsApp.
+     */
+    const handOffToWhatsApp = () => {
+      window.open(
+        `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(formatQuote(payload))}`,
+        "_blank",
+        "noopener"
+      );
+      setVia("whatsapp");
+      setState("sent");
+    };
+
     try {
       const res = await fetch("/api/quote", {
         method: "POST",
@@ -174,14 +228,13 @@ export default function Configurator() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) {
-        setError(data.error ?? "We couldn't send it just now. Please call or WhatsApp us.");
-        setState("error");
+        handOffToWhatsApp();
         return;
       }
+      setVia("server");
       setState("sent");
     } catch {
-      setError("Network trouble — please try again, or call us on " + site.phone + ".");
-      setState("error");
+      handOffToWhatsApp();
     }
   };
 
@@ -222,7 +275,7 @@ export default function Configurator() {
                     </span>
                   ) : (
                     <span className="block text-[0.7rem] opacity-70">
-                      Add a size and quantity to complete the spec
+                      Add a size, thickness and quantity to complete the spec
                     </span>
                   )}
                 </>
@@ -254,15 +307,16 @@ export default function Configurator() {
 
             <div>
               <div className="mb-3 text-[0.66rem] font-bold uppercase tracking-[0.24em] text-ivory-dim">
-                Size / Dimension &amp; Quantity
+                Size, Thickness &amp; Quantity
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <input
+                  ref={widthRef}
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
                   inputMode="decimal"
                   placeholder="Width"
-                  aria-label={`Width in ${unit}`}
+                  aria-label="Width in inches"
                   className={cn(fieldCls, "w-24 text-center")}
                 />
                 <span className="text-ivory-dim">×</span>
@@ -271,26 +325,19 @@ export default function Configurator() {
                   onChange={(e) => setHeight(e.target.value)}
                   inputMode="decimal"
                   placeholder="Height"
-                  aria-label={`Height in ${unit}`}
+                  aria-label="Height in inches"
                   className={cn(fieldCls, "w-24 text-center")}
                 />
-                <div className="inline-flex rounded-full border border-champagne/15 p-1">
-                  {(["ft", "mm"] as const).map((u) => (
-                    <button
-                      key={u}
-                      onClick={() => setUnit(u)}
-                      aria-pressed={unit === u}
-                      className={cn(
-                        "rounded-full px-4 py-1.5 text-[0.72rem] font-semibold transition-all duration-300",
-                        unit === u
-                          ? "bg-gradient-to-r from-copper-bright to-copper text-walnut-950"
-                          : "text-ivory-dim hover:text-ivory"
-                      )}
-                    >
-                      {u}
-                    </button>
-                  ))}
-                </div>
+                <span className="text-[0.72rem] font-semibold text-ivory-dim">inch</span>
+                <input
+                  value={thickness}
+                  onChange={(e) => setThickness(e.target.value)}
+                  inputMode="decimal"
+                  placeholder="Thickness"
+                  aria-label="Thickness in millimetres"
+                  className={cn(fieldCls, "w-28 text-center")}
+                />
+                <span className="text-[0.72rem] font-semibold text-ivory-dim">mm</span>
                 <input
                   value={qty}
                   onChange={(e) => setQty(e.target.value.replace(/[^\d]/g, ""))}
@@ -303,7 +350,7 @@ export default function Configurator() {
                   onClick={commitPending}
                   disabled={!pendingReady}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border border-champagne/20 px-4 py-2 text-[0.72rem] font-semibold text-ivory transition-colors hover:border-copper hover:text-copper-bright",
+                    "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-champagne/20 px-4 py-2 text-[0.72rem] font-semibold text-ivory transition-colors hover:border-copper hover:text-copper-bright",
                     !pendingReady && "cursor-not-allowed opacity-40 hover:border-champagne/20 hover:text-ivory"
                   )}
                 >
@@ -311,7 +358,8 @@ export default function Configurator() {
                 </button>
               </div>
               <p className="mt-2 text-[0.7rem] text-ivory-dim/70">
-                Enter width × height and how many doors — add as many sizes as you need.
+                Width × height in inches, thickness in millimetres, and how many doors —
+                add as many sizes as you need.
               </p>
 
               {/* added lines */}
@@ -324,7 +372,7 @@ export default function Configurator() {
                     >
                       <span>
                         <span className="mr-2 text-ivory-dim">{i + 1}.</span>
-                        {l.width} × {l.height} {l.unit}
+                        {l.width} × {l.height} in · {l.thickness} mm
                         <span className="text-copper-bright"> · {l.qty} doors</span>
                       </span>
                       <button
@@ -378,10 +426,21 @@ export default function Configurator() {
               <div className="glass flex items-start gap-3 rounded-2xl p-5">
                 <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-copper-bright" />
                 <div>
-                  <div className="font-serif text-lg text-ivory">Quotation sent</div>
+                  <div className="font-serif text-lg text-ivory">
+                    {via === "server" ? "Quotation sent" : "Your order is ready to send"}
+                  </div>
                   <p className="mt-1 text-[0.78rem] leading-relaxed text-ivory-dim">
-                    It&apos;s with the works now — we&apos;ll call you on {phone.trim()} within one
-                    working day.
+                    {via === "server" ? (
+                      <>
+                        It&apos;s with the works now — we&apos;ll call you on {phone.trim()} within
+                        one working day.
+                      </>
+                    ) : (
+                      <>
+                        WhatsApp is open with your full order written out and addressed to us —
+                        press send there and we&apos;ll call you on {phone.trim()}.
+                      </>
+                    )}
                   </p>
                   <button
                     onClick={() => {
@@ -401,18 +460,12 @@ export default function Configurator() {
               <div>
                 <button
                   onClick={handleQuote}
-                  disabled={!canQuote || (askDetails && !canSend) || state === "sending"}
-                  className={cn(
-                    "btn-primary mt-2",
-                    (!canQuote || (askDetails && !canSend) || state === "sending") &&
-                      "cursor-not-allowed opacity-40"
-                  )}
+                  disabled={state === "sending"}
+                  className={cn("btn-primary mt-2", state === "sending" && "cursor-wait opacity-70")}
                   title={
-                    !canQuote
-                      ? "Pick a pairing we build, then add a size and quantity"
-                      : askDetails
-                        ? "Send this quotation to the works"
-                        : "Add your name and number to send"
+                    askDetails
+                      ? "Send this quotation to the works"
+                      : "Add your name and number, then send"
                   }
                 >
                   {state === "sending" ? "Sending…" : "Get This Door Quoted"}

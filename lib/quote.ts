@@ -3,10 +3,11 @@
  * plus the validator and formatter the API route uses. Shared so the browser
  * and the server agree on the payload without duplicating the rules.
  */
+/** Width and height are inches; thickness is millimetres. */
 export type QuoteLine = {
   width: string;
   height: string;
-  unit: "ft" | "mm";
+  thickness: string;
   qty: string;
 };
 
@@ -46,12 +47,13 @@ export function validateQuote(input: unknown): QuotePayload | null {
     const l = raw as Record<string, unknown>;
     const width = str(l.width, 10);
     const height = str(l.height, 10);
+    const thickness = str(l.thickness, 10);
     const qty = str(l.qty, 6);
-    if (!width || !height || !qty) return null;
-    if (l.unit !== "ft" && l.unit !== "mm") return null;
-    if (!/^\d+(\.\d+)?$/.test(width) || !/^\d+(\.\d+)?$/.test(height)) return null;
+    if (!width || !height || !thickness || !qty) return null;
+    const num = /^\d+(\.\d+)?$/;
+    if (!num.test(width) || !num.test(height) || !num.test(thickness)) return null;
     if (!/^\d+$/.test(qty) || Number(qty) < 1) return null;
-    lines.push({ width, height, unit: l.unit, qty });
+    lines.push({ width, height, thickness, qty });
   }
 
   return { name, phone, product, wood, frame, lines };
@@ -71,7 +73,10 @@ export function formatQuote(q: QuotePayload): string {
     `Frame type: ${q.frame}`,
     "",
     "Sizes:",
-    ...q.lines.map((l, i) => `${i + 1}. ${l.width} × ${l.height} ${l.unit} — ${l.qty} nos`),
+    ...q.lines.map(
+      (l, i) =>
+        `${i + 1}. ${l.width} × ${l.height} in · ${l.thickness} mm thick — ${l.qty} nos`
+    ),
     "",
     `Total: ${total} doors`,
   ].join("\n");

@@ -20,7 +20,7 @@ const values = [
   {
     icon: HandHeart,
     title: "Generational Trust",
-    copy: "Dealers who started with us in year one still order every month. That is the only award we count.",
+    copy: "Customers who started with us in year one still order every month. That is the only award we count.",
   },
 ];
 
