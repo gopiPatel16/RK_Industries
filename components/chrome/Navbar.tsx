@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Menu, X, Phone, Mail, MapPin, Clock, ChevronDown } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/fx/SocialIcons";
-import { site, nav } from "@/lib/site";
+import { site, nav, type NavItem } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
 import Magnetic from "@/components/fx/Magnetic";
@@ -14,6 +14,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("#home");
   const [open, setOpen] = useState(false);
+  /** Which desktop dropdown is showing, and which mobile group is expanded. */
+  const [menu, setMenu] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -105,18 +108,83 @@ export default function Navbar() {
           </button>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
-            {nav.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => go(item.href)}
-                className={cn(
-                  "nav-link text-[0.8rem] font-medium tracking-wide text-ivory-dim transition-colors hover:text-ivory",
-                  active === item.href && "active"
-                )}
-              >
-                {item.label}
-              </button>
-            ))}
+            {nav.map((item) =>
+              item.children ? (
+                <div
+                  key={item.label}
+                  className="relative"
+                  onMouseEnter={() => setMenu(item.label)}
+                  onMouseLeave={() => setMenu(null)}
+                >
+                  <button
+                    onClick={() => setMenu(menu === item.label ? null : item.label)}
+                    aria-expanded={menu === item.label}
+                    aria-haspopup="true"
+                    className={cn(
+                      "nav-link flex items-center gap-1.5 text-[0.8rem] font-medium tracking-wide text-ivory-dim transition-colors hover:text-ivory",
+                      active === item.href && "active"
+                    )}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      size={13}
+                      className={cn(
+                        "transition-transform duration-300",
+                        menu === item.label && "rotate-180"
+                      )}
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {menu === item.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        className="glass-strong absolute left-1/2 top-full z-10 mt-3 w-52 -translate-x-1/2 overflow-hidden rounded-xl border border-champagne/10 p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                      >
+                        {item.children.map((child) =>
+                          child.href ? (
+                            <button
+                              key={child.label}
+                              onClick={() => {
+                                setMenu(null);
+                                go(child.href!);
+                              }}
+                              className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[0.8rem] text-ivory-dim transition-colors hover:bg-champagne/8 hover:text-copper-bright"
+                            >
+                              {child.label}
+                            </button>
+                          ) : (
+                            <div
+                              key={child.label}
+                              className="flex w-full cursor-default items-center justify-between rounded-lg px-3 py-2.5 text-[0.8rem] text-ivory-dim/45"
+                            >
+                              {child.label}
+                              <span className="rounded-full border border-copper/25 px-2 py-0.5 text-[0.6rem] uppercase tracking-wider text-copper/70">
+                                Soon
+                              </span>
+                            </div>
+                          )
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <button
+                  key={item.label}
+                  onClick={() => go(item.href)}
+                  className={cn(
+                    "nav-link text-[0.8rem] font-medium tracking-wide text-ivory-dim transition-colors hover:text-ivory",
+                    active === item.href && "active"
+                  )}
+                >
+                  {item.label}
+                </button>
+              )
+            )}
           </nav>
 
           <div className="hidden lg:block">
@@ -153,17 +221,70 @@ export default function Navbar() {
               </button>
             </div>
             <nav className="flex flex-1 flex-col justify-center gap-1 px-8" aria-label="Mobile">
-              {nav.map((item, i) => (
-                <motion.button
+              {nav.map((item: NavItem, i) => (
+                <motion.div
                   key={item.label}
                   initial={{ opacity: 0, x: -24 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  onClick={() => go(item.href)}
-                  className="py-2 text-left font-serif text-3xl text-ivory-dim transition-colors hover:text-copper-bright"
                 >
-                  {item.label}
-                </motion.button>
+                  <button
+                    onClick={() =>
+                      item.children
+                        ? setExpanded(expanded === item.label ? null : item.label)
+                        : go(item.href)
+                    }
+                    aria-expanded={item.children ? expanded === item.label : undefined}
+                    className="flex w-full items-center gap-2 py-2 text-left font-serif text-3xl text-ivory-dim transition-colors hover:text-copper-bright"
+                  >
+                    {item.label}
+                    {item.children && (
+                      <ChevronDown
+                        size={20}
+                        className={cn(
+                          "mt-1 transition-transform duration-300",
+                          expanded === item.label && "rotate-180"
+                        )}
+                      />
+                    )}
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {item.children && expanded === item.label && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="ml-4 flex flex-col border-l border-champagne/15 pl-4">
+                          {item.children.map((child) =>
+                            child.href ? (
+                              <button
+                                key={child.label}
+                                onClick={() => go(child.href!)}
+                                className="py-1.5 text-left text-lg text-ivory-dim transition-colors hover:text-copper-bright"
+                              >
+                                {child.label}
+                              </button>
+                            ) : (
+                              <div
+                                key={child.label}
+                                className="flex items-center gap-2.5 py-1.5 text-lg text-ivory-dim/45"
+                              >
+                                {child.label}
+                                <span className="rounded-full border border-copper/25 px-2 py-0.5 text-[0.6rem] uppercase tracking-wider text-copper/70">
+                                  Soon
+                                </span>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
               ))}
             </nav>
             <div className="px-8 pb-10 text-sm text-ivory-dim">

@@ -158,10 +158,19 @@ export default function Process() {
    * through them again in either direction.
    */
   const skipSection = () => {
-    const st = pinST.current;
-    const start = st ? st.start : (root.current?.offsetTop ?? 0);
-    const end = st ? st.end : start + 5600;
-    const target = goingUp ? Math.max(start - 2, 0) : end + 2;
+    /* Land on the neighbouring section itself rather than on the pin's own
+       release point: stopping at the pin edge leaves the finished door still
+       filling the screen, so the skip reads as though nothing happened. */
+    const el = document.getElementById(goingUp ? "about" : "factory");
+    let target: number;
+    if (el) {
+      target = el.getBoundingClientRect().top + window.scrollY;
+    } else {
+      const st = pinST.current;
+      const start = st ? st.start : (root.current?.offsetTop ?? 0);
+      const end = st ? st.end : start + 5600;
+      target = goingUp ? Math.max(start - 2, 0) : end + 2;
+    }
     if (lenisRef.current) lenisRef.current.scrollTo(target, { duration: 1.1 });
     else window.scrollTo({ top: target, behavior: "smooth" });
   };

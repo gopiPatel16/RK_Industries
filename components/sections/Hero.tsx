@@ -10,8 +10,10 @@ import {
   useScroll,
   type MotionValue,
 } from "framer-motion";
+import { scrollToSection } from "@/lib/lenis";
 import { currentTheme } from "@/lib/hero-theme";
 import DoorVisual from "@/components/door/DoorVisual";
+import Magnetic from "@/components/fx/Magnetic";
 import Dust from "@/components/fx/Dust";
 
 /**
@@ -44,24 +46,26 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
   return (
     <motion.div
       style={{ y: sceneY }}
-      className="pointer-events-none absolute inset-0"
+      /* On phones the banner is a 4:3 block and the only thing in the section's
+         flow, so the section is exactly its height: slightly zoomed in from the
+         artwork's native 3:2, trimming ~6% from each side — short of the outer
+         callouts. From lg up it is the full-bleed background again. */
+      className="pointer-events-none relative aspect-[4/3] w-full lg:absolute lg:inset-0 lg:aspect-auto"
       aria-hidden
     >
       {/*
-        The photograph is a 3:2 banner carrying its own product callouts, so how
-        it is fitted has to change with the viewport:
-          · narrow/portrait screens — `contain`, so the whole composition and
-            all three callouts stay readable instead of being sliced apart;
-          · lg and wider, where the viewport is finally wider than 3:2 —
-            `cover`, which fills the screen while still showing the full width.
-        Over-scaled by 3% so the parallax drift never exposes an edge.
+        The photograph is a 3:2 banner carrying its own product callouts, so it
+        is only ever cropped well inside them: on phones a 4:3 frame trims ~6%
+        from each side, and from lg up the viewport is wider than 3:2 so `cover`
+        fills the screen showing the full width. Over-scaled by 3% so the
+        parallax drift never exposes an edge.
       */}
       <motion.div
         className="absolute inset-[-3%]"
         style={{ x: bgX, y: bgY }}
         initial={{ opacity: 0, scale: 1.06 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2.2, duration: 2.4, ease: easeOut }}
+        transition={{ delay: 1.1, duration: 1.5, ease: easeOut }}
       >
         <Image
           src="/images/hero-interior-v5.jpg"
@@ -69,7 +73,7 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
           fill
           priority
           sizes="100vw"
-          className="object-contain object-center lg:object-cover lg:object-[62%_center]"
+          className="object-cover object-center lg:object-[62%_center]"
         />
       </motion.div>
 
@@ -91,6 +95,23 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
           background:
             "radial-gradient(125% 100% at 50% 45%, transparent 68%, rgba(4,2,1,0.42) 100%)",
         }}
+      />
+
+      {/* On phones the copy is overlaid on the artwork rather than stacked
+          below it, so the left side is graded down far enough to read against.
+          It fades out well before the PLYWOOD callout on the right. */}
+      <div
+        className="absolute inset-0 lg:hidden"
+        style={{
+          background:
+            "radial-gradient(115% 78% at 0% 16%, rgba(19,9,6,0.95) 0%, rgba(19,9,6,0.86) 26%, rgba(19,9,6,0.55) 46%, rgba(19,9,6,0.18) 64%, transparent 78%)",
+        }}
+      />
+
+      {/* A short fade at the very bottom so the banner meets Our Story cleanly. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-16 lg:hidden"
+        style={{ background: "linear-gradient(180deg, transparent, #130906)" }}
       />
     </motion.div>
   );
@@ -319,9 +340,9 @@ export default function Hero() {
     <section
       id="home"
       ref={ref}
-      /* shorter on phones/tablets, where the banner is letterboxed rather than
-         filling the screen, so it doesn't float in a sea of empty dark */
-      className="noise relative min-h-[58svh] overflow-hidden bg-[#0A0705] sm:min-h-[66svh] lg:min-h-svh"
+      /* On phones the height comes from the stacked banner + copy; from lg up
+         the copy is overlaid on the full-screen photograph. */
+      className="noise relative overflow-hidden bg-[#130906] lg:min-h-svh"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
@@ -336,14 +357,52 @@ export default function Hero() {
       )}
 
       {/*
-        No overlaid copy: the photograph is a finished piece of artwork with its
-        own headline and product callouts, so anything laid on top collides with
-        it. The navbar's "Request a Quote" carries the call to action.
+        The copy sits in the empty wall on the left of the photograph, kept to a
+        narrow column so it never runs into the artwork's own BLOCK BOARD
+        callout. It is overlaid at every width — on phones it is absolutely
+        positioned over the banner and stepped down in size, so the section is
+        exactly as tall as the artwork and Our Story follows straight after it
+        with no empty band between.
       */}
+      <div className="absolute inset-0 z-20 flex flex-col justify-start px-3 pt-[4.2rem] lg:inset-y-0 lg:left-0 lg:w-[38%] lg:max-w-xl lg:justify-center lg:px-10 lg:pb-40 lg:pt-0">
+        {/* Headline and sub-line share a hairline rule down their left edge.
+            Sans-serif and small on purpose: the photograph is the hero, and a
+            serif display size at this width sat on top of the artwork. */}
+        <motion.div
+          className="max-w-[8.5rem] border-l border-champagne/30 pl-3 sm:max-w-[16rem] lg:max-w-none lg:pl-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.45, duration: 0.9, ease: easeOut }}
+        >
+          <h1 className="font-sans text-[clamp(0.72rem,2.6vw,1.6rem)] font-bold uppercase leading-[1.22] tracking-[0.03em] text-[#E8B98A]">
+            Built with quality.
+            <br />
+            Made to last.
+          </h1>
+
+          <p className="mt-1.5 max-w-md text-[clamp(0.56rem,1.55vw,0.92rem)] leading-[1.5] text-ivory-dim lg:mt-4">
+            Premium Flush Doors, Plywood &amp; Block Boards &mdash; engineered
+            for strength, crafted for excellence.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="mt-2.5 flex flex-wrap items-center gap-3 pl-3 [&_.btn-primary]:!px-3 [&_.btn-primary]:!py-1.5 [&_.btn-primary]:!text-[0.6rem] lg:mt-7 lg:gap-5 lg:pl-6 lg:[&_.btn-primary]:!px-6 lg:[&_.btn-primary]:!py-3 lg:[&_.btn-primary]:!text-[0.82rem]"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.7, duration: 0.9, ease: easeOut }}
+        >
+          <Magnetic>
+            <button onClick={() => scrollToSection("#configurator")} className="btn-primary">
+              Order Your Door
+            </button>
+          </Magnetic>
+        </motion.div>
+      </div>
 
       {/* Blend into the next (walnut) section */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-24"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] hidden h-24 lg:block"
         style={{ background: "linear-gradient(180deg, transparent, #130906)" }}
         aria-hidden
       />

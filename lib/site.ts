@@ -34,12 +34,29 @@ export const site = {
   },
 } as const;
 
-export const nav = [
+/** A product entry with no `href` is announced but not yet orderable. */
+export type NavChild = { label: string; href?: string; soon?: boolean };
+export type NavItem = {
+  label: string;
+  href: string;
+  children?: readonly NavChild[];
+};
+
+export const nav: readonly NavItem[] = [
   { label: "Home", href: "#home" },
   { label: "About Us", href: "#about" },
-  { label: "Flush Doors", href: "#configurator" },
-  { label: "Plywood", href: "#contact" },
+  {
+    label: "Our Products",
+    /* Falls through to the door configurator — the one product that can
+       actually be ordered today. */
+    href: "#configurator",
+    children: [
+      { label: "Flush Doors", href: "#configurator" },
+      { label: "Plywood", soon: true },
+      { label: "Block Board", soon: true },
+    ],
+  },
   { label: "Process", href: "#process" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },
-] as const;
+];
