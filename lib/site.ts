@@ -44,7 +44,7 @@ export type NavItem = {
 
 export const nav: readonly NavItem[] = [
   { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
+  { label: "Our Story", href: "#about" },
   {
     label: "Our Products",
     /* Falls through to the door configurator — the one product that can

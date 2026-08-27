@@ -65,7 +65,7 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
         style={{ x: bgX, y: bgY }}
         initial={{ opacity: 0, scale: 1.06 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.1, duration: 1.5, ease: easeOut }}
+        transition={{ delay: 0.15, duration: 1.2, ease: easeOut }}
       >
         <Image
           src="/images/hero-interior-v5.jpg"
@@ -372,7 +372,7 @@ export default function Hero() {
           className="max-w-[8.5rem] border-l border-champagne/30 pl-3 sm:max-w-[16rem] lg:max-w-none lg:pl-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.45, duration: 0.9, ease: easeOut }}
+          transition={{ delay: 0.35, duration: 0.8, ease: easeOut }}
         >
           <h1 className="font-sans text-[clamp(0.72rem,2.6vw,1.6rem)] font-bold uppercase leading-[1.22] tracking-[0.03em] text-[#E8B98A]">
             Built with quality.
@@ -390,7 +390,7 @@ export default function Hero() {
           className="mt-2.5 flex flex-wrap items-center gap-3 pl-3 [&_.btn-primary]:!px-3 [&_.btn-primary]:!py-1.5 [&_.btn-primary]:!text-[0.6rem] lg:mt-7 lg:gap-5 lg:pl-6 lg:[&_.btn-primary]:!px-6 lg:[&_.btn-primary]:!py-3 lg:[&_.btn-primary]:!text-[0.82rem]"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.7, duration: 0.9, ease: easeOut }}
+          transition={{ delay: 0.5, duration: 0.8, ease: easeOut }}
         >
           <Magnetic>
             <button onClick={() => scrollToSection("#configurator")} className="btn-primary">

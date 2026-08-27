@@ -51,11 +51,11 @@ export default function About() {
 
   return (
     <section id="about" className="ambient relative scroll-mt-20 overflow-hidden pb-20 pt-12 lg:py-36">
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2 lg:gap-20">
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[0.58fr_1fr] lg:gap-20">
         {/* Parallax wood portrait */}
         <div
           ref={ref}
-          className="relative order-2 h-[26rem] overflow-hidden rounded-[2rem] border border-champagne/10 shadow-[0_40px_100px_rgba(0,0,0,0.55)] lg:order-1 lg:h-[35rem]"
+          className="relative order-2 h-[26rem] overflow-hidden rounded-[2rem] border border-champagne/10 shadow-[0_40px_100px_rgba(0,0,0,0.55)] lg:order-1 lg:h-[27rem]"
         >
           <motion.div className="absolute inset-[-10%]" style={{ scale: imgScale }}>
             <Image

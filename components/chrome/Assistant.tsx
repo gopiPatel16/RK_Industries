@@ -29,8 +29,8 @@ const QUICK = [
   "Your products",
   "Sizes & thickness",
   "Pricing",
-  "Warranty",
-  "Visit / contact",
+  "Visit us",
+  "Contact number",
 ];
 
 function reply(raw: string): { text: string; actions?: Action[] } {
@@ -43,7 +43,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
 
   if (has("hi ", "hello", "hey", "namaste", "namaskar") || q === "hi")
     return {
-      text: `Namaste! 🙏 Ask me about our flush doors, plywood, sizes, finishes, pricing, warranty or where to find us.`,
+      text: `Namaste! 🙏 Ask me about our flush doors, plywood, sizes, finishes, pricing or where to find us.`,
     };
 
   if (has("product", "what do you", "what all", "offer", "catalog", "catalogue", "range"))
@@ -108,7 +108,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
 
   if (has("warrant", "guarantee"))
     return {
-      text: "Our flush doors carry a 10-year warranty against delamination and warping.",
+      text: "That is best confirmed with us directly for your order — call or WhatsApp the works and we will talk it through.",
     };
 
   if (word("isi", "iso") || has("certif", "quality", "standard", "grade"))
@@ -179,7 +179,7 @@ function reply(raw: string): { text: string; actions?: Action[] } {
     };
 
   return {
-    text: "I can help with our flush doors, plywood, sizes, finishes, thickness, pricing, warranty, delivery, becoming a customer, or visiting us. For anything specific, our team is one tap away.",
+    text: "I can help with our flush doors, plywood, sizes, finishes, thickness, pricing, delivery, becoming a customer, or visiting us. For anything specific, our team is one tap away.",
     actions: [
       { label: "WhatsApp us", kind: "wa" },
       { label: "Call us", kind: "call" },

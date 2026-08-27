@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { CheckCircle2, Loader2, Plus, X } from "lucide-react";
+import { CheckCircle2, Loader2, MessageCircle, Plus, X } from "lucide-react";
 import { Reveal, SplitText } from "@/components/fx/Reveal";
 import { formatQuote, type QuotePayload } from "@/lib/quote";
 import { site } from "@/lib/site";
@@ -155,6 +155,43 @@ export default function Configurator() {
    * asks who's enquiring; the next one sends, server-side, so no WhatsApp
    * window opens and the visitor stays on the page.
    */
+  /**
+   * Opens WhatsApp and nothing else. This is the route for someone who does not
+   * want to fill a form, so it never validates and never blocks — whatever the
+   * visitor happens to have picked rides along as context, and the rest of the
+   * order is settled in the conversation.
+   */
+  const handleWhatsAppOrder = () => {
+    setState("idle");
+    setError("");
+
+    const all = commitPending();
+    const spec: string[] = [];
+    if (product) spec.push(`Product: ${product}`);
+    spec.push(`Wood type: ${woods.find((w) => w.id === wood)!.label}`);
+    spec.push(`Frame type: ${frames.find((f) => f.id === frame)!.label}`);
+    if (all.length) {
+      spec.push("", "Sizes:");
+      all.forEach((l, i) =>
+        spec.push(
+          `${i + 1}. ${l.width} × ${l.height} in · ${l.thickness} mm thick — ${l.qty} nos`
+        )
+      );
+    }
+
+    const text = [
+      `Hi ${site.shortName}, I'd like to order a flush door.`,
+      "",
+      ...spec,
+    ].join("\n");
+
+    window.open(
+      `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   const handleQuote = async () => {
     if (state === "sending") return;
     setState("idle");
@@ -470,6 +507,15 @@ export default function Configurator() {
                 >
                   {state === "sending" ? "Sending…" : "Get This Door Quoted"}
                   {state === "sending" && <Loader2 size={15} className="animate-spin" />}
+                </button>
+
+                <button
+                  onClick={handleWhatsAppOrder}
+                  className="mt-2 ml-0 inline-flex min-h-11 items-center gap-2.5 rounded-full border border-[#3ddc71]/35 bg-[#3ddc71]/10 px-6 py-3 text-[0.85rem] font-semibold text-[#5fe08c] transition-colors hover:border-[#3ddc71]/70 hover:bg-[#3ddc71]/15 sm:ml-3"
+                  title="Open WhatsApp and order in chat — nothing to fill in first"
+                >
+                  <MessageCircle size={16} />
+                  Order via WhatsApp
                 </button>
 
                 {state === "error" && (

@@ -1,6 +1,5 @@
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import Cursor from "@/components/fx/Cursor";
-import Loader from "@/components/chrome/Loader";
 import ScrollProgress from "@/components/chrome/ScrollProgress";
 import Navbar from "@/components/chrome/Navbar";
 import Dock from "@/components/chrome/Dock";
@@ -19,7 +18,6 @@ import Contact from "@/components/sections/Contact";
 export default function Home() {
   return (
     <SmoothScroll>
-      <Loader />
       <Cursor />
       <ScrollProgress />
       <Navbar />
