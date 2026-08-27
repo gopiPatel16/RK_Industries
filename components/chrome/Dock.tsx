@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, DoorOpen, MessageCircle, Phone, Sparkles } from "lucide-react";
+import { ArrowUp, MessageCircle, Phone, Sparkles } from "lucide-react";
 import { site } from "@/lib/site";
-import { lenisRef, scrollToSection } from "@/lib/lenis";
+import { lenisRef } from "@/lib/lenis";
 import Assistant from "@/components/chrome/Assistant";
 
 export default function Dock() {
@@ -20,43 +20,6 @@ export default function Dock() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /**
-   * The order tab rides level with the scrollbar thumb, so it must reproduce the
-   * thumb's geometry rather than simply spread itself over the viewport: the
-   * thumb is sized by how much of the document fits on screen, and travels only
-   * `viewport - thumb` pixels. Mapping the tab across the full height instead
-   * makes it drift out of step, fast at first and slow at the end.
-   *
-   * Committed as a plain CSS `top` from a scroll listener on purpose — an
-   * animated MotionValue only moves on a rendered frame, and this has to hold
-   * its place even when the page is not compositing.
-   */
-  const tabRef = useRef<HTMLButtonElement>(null);
-  const [tabTop, setTabTop] = useState(0);
-  useEffect(() => {
-    const place = () => {
-      const vh = window.innerHeight;
-      const sh = document.documentElement.scrollHeight;
-      const max = sh - vh;
-      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-
-      // WebKit will not draw a thumb shorter than ~20px however long the page is.
-      const thumbH = Math.max(20, (vh * vh) / sh);
-      const thumbCentre = p * (vh - thumbH) + thumbH / 2;
-
-      const tabH = tabRef.current?.offsetHeight ?? 0;
-      const top = thumbCentre - tabH / 2;
-      setTabTop(Math.min(Math.max(top, 4), vh - tabH - 4));
-    };
-    place();
-    window.addEventListener("scroll", place, { passive: true });
-    window.addEventListener("resize", place);
-    return () => {
-      window.removeEventListener("scroll", place);
-      window.removeEventListener("resize", place);
-    };
-  }, []);
-
   const toTop = () => {
     if (lenisRef.current) lenisRef.current.scrollTo(0, { duration: 1.2 });
     else window.scrollTo({ top: 0, behavior: "smooth" });
@@ -64,27 +27,6 @@ export default function Dock() {
 
   return (
     <>
-      {/* Order tab — rides the right edge level with the scrollbar thumb, so it
-          travels with the scrollbar as the page moves. `100%` inside the calc is
-          the button's own height, which keeps it inside the viewport at both
-          ends of the track. */}
-      <button
-        ref={tabRef}
-        onClick={() => scrollToSection("#configurator")}
-        aria-label="Order now — go to the door configurator"
-        style={{
-          top: `${tabTop}px`,
-          background:
-            "linear-gradient(135deg, var(--copper-bright), var(--copper) 55%, #9c6534)",
-          boxShadow:
-            "0 6px 22px rgba(201,138,75,0.35), inset 0 1px 0 rgba(255,244,224,0.5)",
-        }}
-        className="group fixed right-0 z-[64] flex items-center gap-1.5 rounded-l-full py-1.5 pl-3 pr-2.5 text-[0.58rem] font-bold tracking-wide text-walnut-950 transition-[filter,box-shadow] duration-300 hover:brightness-110 sm:py-2 sm:pl-3.5 sm:pr-3 sm:text-[0.63rem]"
-      >
-        <DoorOpen size={11} className="transition-transform group-hover:-translate-x-0.5" />
-        Order Now
-      </button>
-
       <div className="fixed bottom-5 right-5 z-[65] flex flex-col items-end gap-3">
         <Assistant open={assistant} onClose={() => setAssistant(false)} />
 
