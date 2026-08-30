@@ -24,38 +24,38 @@ const steps = [
   },
   {
     n: "02",
-    title: "Core Sheet",
-    copy: "Three to four horizontal core pieces are laid across the veneer, edge to edge, to form the first core layer.",
+    title: "Core Layer",
+    copy: "Horizontal core sheet pieces are placed side by side to create the first core layer.",
   },
   {
     n: "03",
-    title: "The Bond",
-    copy: "Phenol-formaldehyde resin spreads edge to edge — a boil-proof bond that laughs at monsoons.",
+    title: "Glue Application",
+    copy: "Adhesive glue is applied to core sheets with the help of a Glue Spreader machine to hold the layers firmly together.",
   },
   {
     n: "04",
-    title: "The Frame",
-    copy: "Kiln-seasoned hardwood stiles and rails are jointed into a perfectly square outer frame — the skeleton of every वanWood door.",
+    title: "Wooden Frame",
+    copy: "Seasoned hardwood pieces are joined to make the outer frame of the door.",
   },
   {
     n: "05",
-    title: "Core Blocks",
-    copy: "Small vertical stick-like blocks are packed tight inside the frame, killing hollow spots and future warp.",
+    title: "Core Filling",
+    copy: "Vertical wood blocks are fitted tightly inside the frame for added strength and stability.",
   },
   {
     n: "06",
-    title: "Core Sheet",
-    copy: "A second set of three to four horizontal core pieces closes the core over the blocks.",
+    title: "Second Core Layer",
+    copy: "Another layer of horizontal core sheet pieces is placed over the blocks.",
   },
   {
     n: "07",
-    title: "The Bond",
-    copy: "The second glue line seals the stack, edge to edge, before the final skin goes on.",
+    title: "Glue Application",
+    copy: "One more time adhesive glue is applied to core sheets with the help of a Glue Spreader machine to hold the layers firmly together.",
   },
   {
     n: "08",
-    title: "Veneer Sheet",
-    copy: "The last thin veneer sheet is hot-pressed onto the face at 110°C, grain aligned sheet to sheet.",
+    title: "Veneer Layer",
+    copy: "A thin veneer sheet is placed on the surface and hot-pressed at 110°C.",
   },
 ];
 
