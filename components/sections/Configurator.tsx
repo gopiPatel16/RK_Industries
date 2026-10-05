@@ -292,7 +292,7 @@ export default function Configurator() {
             <div className="relative overflow-hidden rounded-[1.5rem] border border-champagne/12">
               <Image
                 src="/gallery/12-final-product.jpg"
-                alt="Finished वanWood flush doors stacked at the works"
+                alt="Finished Radhavan flush doors stacked at the works"
                 width={1536}
                 height={1024}
                 sizes="(max-width: 1024px) 100vw, 33vw"

@@ -60,7 +60,7 @@ export default function About() {
           <motion.div className="absolute inset-[-10%]" style={{ scale: imgScale }}>
             <Image
               src="/images/our-story.jpg"
-              alt="The vanWood yard at dusk — open sheds with offcuts stacked outside"
+              alt="The Radhavan yard at dusk — open sheds with offcuts stacked outside"
               fill
               sizes="(min-width: 1024px) 45vw, 100vw"
               className="object-cover object-center"

@@ -52,9 +52,7 @@ html {
 body {
   background: var(--walnut-950);
   color: var(--ivory);
-  /* Devanagari face sits after the Latin one so only the wordmark's व
-     falls through to it — see app/layout.tsx */
-  font-family: var(--font-manrope), var(--font-deva-sans), system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
@@ -72,7 +70,7 @@ body {
 }
 
 /* ── Typography helpers ── */
-.font-serif { font-family: var(--font-fraunces), var(--font-deva-serif), Georgia, serif; }
+.font-serif { font-family: var(--font-fraunces), Georgia, serif; }
 
 .eyebrow {
   font-size: 0.72rem;

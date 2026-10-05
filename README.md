@@ -1,6 +1,6 @@
-# RADHA KRISHNA INDUSTRIES — Premium Flush Doors & Plywood
+# RADHAVAN — Premium Flush Doors & Plywood
 
-A cinematic, dark-luxury single-page website for Radha Krishna Industries,
+A cinematic, dark-luxury single-page website for Radhavan (Radha Krishna Industries),
 a doors & plywood manufacturer in Birgaon, Raipur, Chhattisgarh. Built with
 Next.js (App Router), TypeScript, Tailwind CSS v4, GSAP ScrollTrigger,
 Framer Motion, Lenis and React Three Fiber.

@@ -3,6 +3,7 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/fx/SocialIcons";
 import { site, nav } from "@/lib/site";
+import BrandLogo from "@/components/chrome/BrandLogo";
 import { scrollToSection } from "@/lib/lenis";
 
 export default function Footer() {
@@ -11,7 +12,7 @@ export default function Footer() {
       <div className="ambient pointer-events-none absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr] lg:gap-20">
         <div>
-          <div className="font-serif text-3xl text-champagne">{site.name}</div>
+          <BrandLogo showTagline={false} sizeClass="text-2xl" />
           <div className="mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-ivory-dim">
             By Radha Krishna Industries
           </div>

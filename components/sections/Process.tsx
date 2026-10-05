@@ -9,7 +9,7 @@ import { lenisRef } from "@/lib/lenis";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * The real वanWood layup, bottom face upward — an eight-layer
+ * The real Radhavan layup, bottom face upward — an eight-layer
  * sandwich pressed between two thin veneer skins:
  *
  *   veneer → core (3–4 horizontal pieces) → glue → frame

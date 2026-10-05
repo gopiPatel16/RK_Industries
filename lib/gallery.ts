@@ -1,6 +1,6 @@
 /**
  * ── THE PROCESS, IN ORDER ────────────────────────────────────
- * The eleven stations a वanWood door passes through, shared by the Gallery
+ * The eleven stations a Radhavan door passes through, shared by the Gallery
  * grid and the Factory carousel so the two can never drift.
  *
  * Step 07 (hot pressing) has no photograph yet — it carries `src: null` and

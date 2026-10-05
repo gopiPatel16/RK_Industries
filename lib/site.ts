@@ -4,19 +4,21 @@
  * Everything on the site reads from this file.
  */
 export const site = {
-  name: "वanWood",
+  name: "Radhavan",
   /** Short form for tight spaces — navbar, loader, chat bubbles */
-  shortName: "वanWood",
-  /** Monogram shown in the logo mark (the व of the wordmark) */
-  initials: "व",
-  legalName: "वanWood",
+  shortName: "Radhavan",
+  /** Monogram shown in the logo mark */
+  initials: "R",
+  legalName: "Radhavan",
+  /** The line under the logo */
+  motto: "Where Nature Meets Craftsmanship",
   tagline: "Crafting Entrances That Last Generations.",
   sub: "We manufacture premium flush doors and plywood with precision engineering and timeless craftsmanship.",
   address: "Industrial Area, Birgaon, Raipur, Chhattisgarh 493221, India",
   shortAddress: "Birgaon, Raipur, Chhattisgarh",
   phone: "+91 62603 01778",
   whatsapp: "916260301778",
-  email: "info@vanwood.in",
+  email: "info@radhavan.in",
   hours: "Mon – Sat · 10:00 AM – 6:00 PM",
   gstin: "22AAUFR4139F1Z3",
   mapsQuery: "Birgaon,Raipur,Chhattisgarh",

@@ -1,10 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Fraunces,
-  Manrope,
-  Noto_Serif_Devanagari,
-  Noto_Sans_Devanagari,
-} from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
 
@@ -19,23 +14,8 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
-/**
- * The wordmark opens with व (Devanagari), which the Latin faces above don't
- * carry. These sit after them in the font stacks so only that glyph falls
- * through — keeping the brand mark in key instead of hitting a system font.
- */
-const notoSerifDeva = Noto_Serif_Devanagari({
-  variable: "--font-deva-serif",
-  subsets: ["devanagari"],
-});
-
-const notoSansDeva = Noto_Sans_Devanagari({
-  variable: "--font-deva-sans",
-  subsets: ["devanagari"],
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vanwood.in"),
+  metadataBase: new URL("https://radhavan.in"),
   title: {
     default: `${site.name} — Premium Flush Doors & Plywood | Raipur, Chhattisgarh`,
     template: `%s — ${site.name}`,
@@ -90,7 +70,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${manrope.variable} ${notoSerifDeva.variable} ${notoSansDeva.variable}`}
+      className={`${fraunces.variable} ${manrope.variable}`}
     >
       <body>
         <script

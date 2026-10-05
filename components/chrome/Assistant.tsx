@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 import { scrollToSection } from "@/lib/lenis";
 
 /**
- * वanWood concierge — a client-side product assistant.
+ * Radhavan concierge — a client-side product assistant.
  * Keyword-matched answers built from the site config + product knowledge,
  * with WhatsApp/call fallbacks. No backend required (works static on Vercel).
  * Swap `reply()` for a server route + LLM later if a live AI is wanted.
