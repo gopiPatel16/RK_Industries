@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
-import { lenisRef } from "@/lib/lenis";
+import { lenisRef, sectionLanding } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -206,6 +206,8 @@ export default function Process() {
         },
       });
       pinST.current = tl.scrollTrigger ?? null;
+      // Nav links land on step 01 fully drawn, not on the empty stage before it.
+      sectionLanding["#process"] = () => pinST.current?.labelToScroll("step1") ?? null;
 
       /** Retire the previous caption, bring in this one. */
       const caption = (i: number) => {
@@ -218,6 +220,7 @@ export default function Process() {
       // 01 · first thin veneer sheet — the base skin
       caption(0);
       tl.to(q(".layer-veneer-back"), { autoAlpha: 1, scale: 1, duration: 1 }, "<");
+      tl.addLabel("step1");
       hold();
 
       // 02 · first core layer — 3–4 horizontal pieces
@@ -275,7 +278,10 @@ export default function Process() {
       tl.to({}, { duration: 0.4 }); // breathing room at the end
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      delete sectionLanding["#process"];
+      ctx.revert();
+    };
   }, []);
 
   return (

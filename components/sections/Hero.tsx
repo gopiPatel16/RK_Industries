@@ -394,7 +394,7 @@ export default function Hero() {
         >
           <Magnetic>
             <button onClick={() => scrollToSection("#configurator")} className="btn-primary">
-              Order Your Door
+              Order Now
             </button>
           </Magnetic>
         </motion.div>
