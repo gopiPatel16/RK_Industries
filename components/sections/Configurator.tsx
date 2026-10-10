@@ -156,35 +156,15 @@ export default function Configurator() {
    * window opens and the visitor stays on the page.
    */
   /**
-   * Opens WhatsApp and nothing else. This is the route for someone who does not
-   * want to fill a form, so it never validates and never blocks — whatever the
-   * visitor happens to have picked rides along as context, and the rest of the
-   * order is settled in the conversation.
+   * Opens WhatsApp with a plain greeting and nothing else. This is the route
+   * for someone who does not want to fill a form, so it never validates and
+   * never blocks — the order itself is settled in the conversation.
    */
   const handleWhatsAppOrder = () => {
     setState("idle");
     setError("");
 
-    const all = commitPending();
-    const spec: string[] = [];
-    if (product) spec.push(`Product: ${product}`);
-    spec.push(`Wood type: ${woods.find((w) => w.id === wood)!.label}`);
-    spec.push(`Frame type: ${frames.find((f) => f.id === frame)!.label}`);
-    if (all.length) {
-      spec.push("", "Sizes:");
-      all.forEach((l, i) =>
-        spec.push(
-          `${i + 1}. ${l.width} × ${l.height} in · ${l.thickness} mm thick — ${l.qty} nos`
-        )
-      );
-    }
-
-    const text = [
-      `Hi ${site.shortName}, I'd like to order a flush door.`,
-      "",
-      ...spec,
-    ].join("\n");
-
+    const text = `Hi ${site.shortName}, I'd like to order a flush door`;
     window.open(
       `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`,
       "_blank",
@@ -299,7 +279,7 @@ export default function Configurator() {
                 className="h-auto w-full"
                 priority={false}
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-walnut-950/70 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 via-35% to-transparent" />
             </div>
             <div className="glass mt-6 rounded-2xl p-4 text-center text-[0.78rem] leading-relaxed text-ivory-dim">
               {product ? (

@@ -153,7 +153,7 @@ export default function Factory() {
                         className="object-cover"
                       />
                       {/* keeps the photo's own burnt-in caption legible */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-walnut-950/10 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 via-35% to-transparent" />
                     </>
                   ) : (
                     /* station still awaiting its photograph — named, not skipped */
