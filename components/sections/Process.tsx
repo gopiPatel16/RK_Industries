@@ -288,10 +288,10 @@ export default function Process() {
     <section
       id="process"
       ref={root}
-      className="noise relative flex h-svh items-center overflow-hidden"
+      className="theme-dark noise relative flex h-svh items-center overflow-hidden pt-16 lg:pt-24"
       style={{
         background:
-          "radial-gradient(80% 70% at 70% 50%, #1d0f07 0%, #130906 60%, #0d0603 100%)",
+          "radial-gradient(80% 70% at 70% 50%, #2e1d13 0%, var(--walnut-950) 60%, #1a110b 100%)",
       }}
     >
       <div className="mx-auto grid w-full max-w-7xl items-center gap-6 px-6 lg:grid-cols-[1fr_1.2fr] lg:gap-10">
@@ -312,7 +312,7 @@ export default function Process() {
           className="order-2 flex items-center justify-center"
           style={{ perspective: "1600px" }}
         >
-          <div className="assembly relative aspect-[10/19] w-40 [transform-style:preserve-3d] md:w-56 lg:w-64">
+          <div className="assembly relative aspect-[10/19] h-[min(46svh,22rem)] [transform-style:preserve-3d] lg:h-[min(62svh,26rem)]">
             {/* dynamic light behind final door */}
             <div
               className="final-glow absolute inset-[-25%] rounded-full"

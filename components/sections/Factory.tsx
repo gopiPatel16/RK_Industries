@@ -60,7 +60,7 @@ export default function Factory() {
   return (
     <section
       id="factory"
-      className="relative overflow-hidden bg-walnut-950 py-24 lg:py-32"
+      className="relative overflow-hidden bg-walnut-900 py-24 lg:py-32"
     >
       <div className="mx-auto max-w-7xl px-6">
         {/* ── Heading + arrows ── */}

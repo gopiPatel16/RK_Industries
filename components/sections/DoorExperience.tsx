@@ -43,13 +43,13 @@ export default function DoorExperience() {
   };
 
   return (
-    <section className="noise relative overflow-hidden py-32 lg:py-44">
+    <section className="theme-dark noise relative overflow-hidden py-24 lg:py-32">
       {/* deep vignette environment */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(70% 60% at 50% 42%, #221207 0%, #130906 55%, #0b0503 100%)",
+            "radial-gradient(70% 60% at 50% 42%, #33231a 0%, var(--walnut-950) 55%, #1a110b 100%)",
         }}
       />
       {hover && <Dust count={22} />}
@@ -69,7 +69,7 @@ export default function DoorExperience() {
 
         <div
           ref={stageRef}
-          className="relative mx-auto mt-16 w-56 will-change-transform md:w-64"
+          className="relative mx-auto mt-12 w-40 will-change-transform md:w-48"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >

@@ -89,8 +89,8 @@ function Chip({
       className={cn(
         "rounded-full border px-5 py-2.5 text-[0.78rem] font-medium transition-all duration-300",
         active
-          ? "border-copper bg-copper/15 text-copper-bright shadow-[0_0_18px_rgba(201,138,75,0.25)]"
-          : "border-champagne/15 text-ivory-dim hover:border-champagne/35 hover:text-ivory"
+          ? "border-copper bg-copper text-[#fffaf2] shadow-[0_6px_18px_rgba(164,103,47,0.3)]"
+          : "border-champagne/15 bg-white/70 text-ivory-dim hover:border-copper/50 hover:text-ivory"
       )}
     >
       {children}
@@ -99,7 +99,7 @@ function Chip({
 }
 
 const fieldCls =
-  "rounded-xl border border-champagne/15 bg-walnut-900/50 px-3 py-2.5 text-sm text-ivory outline-none transition-colors placeholder:text-ivory-dim/40 focus:border-copper";
+  "rounded-xl border border-champagne/15 bg-white/80 px-3 py-2.5 text-sm text-ivory outline-none transition-colors placeholder:text-ivory-dim/40 focus:border-copper";
 
 export default function Configurator() {
   const [wood, setWood] = useState<Wood>("hard");
@@ -511,7 +511,7 @@ export default function Configurator() {
 
                 <button
                   onClick={handleWhatsAppOrder}
-                  className="mt-2 ml-0 inline-flex min-h-11 items-center gap-2.5 rounded-full border border-[#3ddc71]/35 bg-[#3ddc71]/10 px-6 py-3 text-[0.85rem] font-semibold text-[#5fe08c] transition-colors hover:border-[#3ddc71]/70 hover:bg-[#3ddc71]/15 sm:ml-3"
+                  className="mt-2 ml-0 inline-flex min-h-11 items-center gap-2.5 rounded-full border border-[#1f9d4c]/40 bg-white px-6 py-3 text-[0.85rem] font-semibold text-[#17803d] transition-colors hover:border-[#1f9d4c] hover:bg-[#1f9d4c]/5 sm:ml-3"
                   title="Open WhatsApp and order in chat — nothing to fill in first"
                 >
                   <MessageCircle size={16} />

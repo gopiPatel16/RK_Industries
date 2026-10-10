@@ -20,7 +20,7 @@ export default function Gallery() {
   const visible = shots.filter((s) => cat === "All" || s.cat === cat);
 
   return (
-    <section id="gallery" className="relative scroll-mt-20 py-28 lg:py-36">
+    <section id="gallery" className="relative scroll-mt-20 bg-walnut-900 py-28 lg:py-36">
       <div className="mx-auto max-w-7xl px-6">
         <Reveal>
           <div className="eyebrow mb-5">The gallery</div>
@@ -37,8 +37,8 @@ export default function Gallery() {
                 className={cn(
                   "inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-[0.72rem] font-medium transition-all duration-300",
                   cat === c
-                    ? "border-copper bg-copper/15 text-copper-bright"
-                    : "border-champagne/15 text-ivory-dim hover:border-champagne/35 hover:text-ivory"
+                    ? "border-copper bg-copper text-[#fffaf2] shadow-[0_6px_18px_rgba(164,103,47,0.3)]"
+                    : "border-champagne/15 bg-white/70 text-ivory-dim hover:border-copper/50 hover:text-ivory"
                 )}
               >
                 {c}

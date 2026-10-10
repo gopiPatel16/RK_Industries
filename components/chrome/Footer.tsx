@@ -8,7 +8,7 @@ import { scrollToSection } from "@/lib/lenis";
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-champagne/8 bg-walnut-900/40">
+    <footer className="theme-dark relative bg-walnut-950">
       <div className="ambient pointer-events-none absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr] lg:gap-20">
         <div>

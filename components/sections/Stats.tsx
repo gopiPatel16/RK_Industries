@@ -13,12 +13,12 @@ const items = [
 
 export default function Stats() {
   return (
-    <section className="relative border-y border-champagne/8 bg-walnut-900/30 py-16 lg:py-20">
+    <section className="theme-dark relative bg-walnut-950 py-16 lg:py-20">
       <div className="ambient pointer-events-none absolute inset-0" />
-      <div className="relative mx-auto grid max-w-6xl grid-cols-2 gap-10 px-6 text-center lg:grid-cols-4">
+      <div className="relative mx-auto grid max-w-6xl grid-cols-2 gap-y-10 px-6 text-center lg:grid-cols-4 lg:divide-x lg:divide-champagne/10">
         {items.map((item, i) => (
           <Reveal key={item.label} delay={i * 0.1}>
-            <div className="font-serif text-[clamp(2.2rem,4.5vw,3.6rem)] leading-none text-champagne">
+            <div className="font-serif text-[clamp(2.2rem,4.5vw,3.6rem)] leading-none text-transparent bg-gradient-to-b from-copper-bright to-copper bg-clip-text">
               <Counter to={item.to} suffix={item.suffix} />
             </div>
             <div className="mt-3 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-ivory-dim">

@@ -50,7 +50,7 @@ export default function Navbar() {
   return (
     <>
       {/* ── Top information bar ── */}
-      <div className="fixed inset-x-0 top-0 z-[60] hidden border-b border-champagne/8 bg-walnut-950/70 backdrop-blur-md lg:block">
+      <div className="theme-dark fixed inset-x-0 top-0 z-[60] hidden border-b border-champagne/8 bg-walnut-950 lg:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-1.5 text-[0.7rem] text-ivory-dim">
           <div className="flex items-center gap-5">
             <span className="flex items-center gap-1.5">
@@ -93,13 +93,13 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-x-0 top-0 z-[55] lg:top-7"
+        className={cn("fixed inset-x-0 top-0 z-[55] lg:top-7", !scrolled && "theme-dark")}
       >
         <div
           className={cn(
             "mx-auto flex max-w-7xl items-center justify-between px-5 py-3 transition-all duration-500 lg:mx-6 lg:rounded-2xl xl:mx-auto",
             scrolled
-              ? "glass-strong shadow-[0_16px_48px_rgba(0,0,0,0.45)]"
+              ? "glass-strong shadow-[0_12px_36px_rgba(59,40,25,0.12)]"
               : "border border-transparent bg-transparent"
           )}
         >

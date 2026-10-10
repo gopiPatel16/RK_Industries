@@ -111,7 +111,7 @@ function ArtisanScene({ sx, sy, sceneY }: SceneProps) {
       {/* A short fade at the very bottom so the banner meets Our Story cleanly. */}
       <div
         className="absolute inset-x-0 bottom-0 h-16 lg:hidden"
-        style={{ background: "linear-gradient(180deg, transparent, #130906)" }}
+        style={{ background: "linear-gradient(180deg, transparent, var(--walnut-950))" }}
       />
     </motion.div>
   );
@@ -137,14 +137,14 @@ function GalleryScene({ sx, sy, sceneY }: SceneProps) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(85% 75% at 66% 38%, #1c1109 0%, #100a06 48%, #0A0705 100%)",
+            "radial-gradient(85% 75% at 66% 38%, #2c1d13 0%, #22160f 48%, #1a110b 100%)",
         }}
       />
       <div
         className="absolute inset-x-0 bottom-0 h-[30%]"
         style={{
           background:
-            "linear-gradient(180deg, transparent, rgba(20,12,7,0.9) 55%, #0A0705)",
+            "linear-gradient(180deg, transparent, rgba(30,19,13,0.9) 55%, #1a110b)",
         }}
       />
 
@@ -342,7 +342,7 @@ export default function Hero() {
       ref={ref}
       /* On phones the height comes from the stacked banner + copy; from lg up
          the copy is overlaid on the full-screen photograph. */
-      className="noise relative overflow-hidden bg-[#130906] lg:min-h-svh"
+      className="theme-dark noise relative overflow-hidden bg-walnut-950 lg:min-h-svh"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
@@ -403,7 +403,7 @@ export default function Hero() {
       {/* Blend into the next (walnut) section */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] hidden h-24 lg:block"
-        style={{ background: "linear-gradient(180deg, transparent, #130906)" }}
+        style={{ background: "linear-gradient(180deg, transparent, var(--walnut-950))" }}
         aria-hidden
       />
     </section>

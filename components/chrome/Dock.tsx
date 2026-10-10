@@ -40,7 +40,7 @@ export default function Dock() {
                 transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                 onClick={toTop}
                 aria-label="Back to top"
-                className="glass flex h-11 w-11 items-center justify-center rounded-full text-ivory-dim transition-colors hover:text-copper-bright"
+                className="flex h-11 w-11 border border-[#3b2819]/10 bg-[#fffdf9] shadow-[0_6px_20px_rgba(42,29,20,0.18)] items-center justify-center rounded-full text-ivory-dim transition-colors hover:text-copper-bright"
               >
                 <ArrowUp size={16} />
               </motion.button>
@@ -50,7 +50,7 @@ export default function Dock() {
             onClick={() => setAssistant((v) => !v)}
             aria-label={assistant ? "Close assistant" : "Open assistant"}
             aria-expanded={assistant}
-            className={`glass flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
+            className={`flex h-11 w-11 border border-[#3b2819]/10 bg-[#fffdf9] shadow-[0_6px_20px_rgba(42,29,20,0.18)] items-center justify-center rounded-full transition-colors ${
               assistant ? "text-copper-bright" : "text-ivory-dim hover:text-copper-bright"
             }`}
           >
@@ -59,7 +59,7 @@ export default function Dock() {
           <a
             href={`tel:${site.phone.replace(/\s/g, "")}`}
             aria-label="Call us"
-            className="glass flex h-11 w-11 items-center justify-center rounded-full text-ivory-dim transition-colors hover:text-copper-bright"
+            className="flex h-11 w-11 border border-[#3b2819]/10 bg-[#fffdf9] shadow-[0_6px_20px_rgba(42,29,20,0.18)] items-center justify-center rounded-full text-ivory-dim transition-colors hover:text-copper-bright"
           >
             <Phone size={16} />
           </a>
@@ -69,7 +69,7 @@ export default function Dock() {
             rel="noreferrer"
             aria-label="Chat on WhatsApp"
             whileHover={{ scale: 1.08 }}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#3ddc71] to-[#1faa4f] text-walnut-950 shadow-[0_8px_28px_rgba(61,220,113,0.35)]"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#3ddc71] to-[#1faa4f] text-white shadow-[0_8px_28px_rgba(61,220,113,0.35)]"
           >
             <MessageCircle size={19} />
           </motion.a>

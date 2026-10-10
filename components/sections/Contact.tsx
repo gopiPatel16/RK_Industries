@@ -9,7 +9,7 @@ import Magnetic from "@/components/fx/Magnetic";
 import { cn } from "@/lib/utils";
 
 const inputCls =
-  "w-full rounded-xl border border-champagne/15 bg-walnut-900/50 px-4 py-3 text-sm text-ivory placeholder:text-ivory-dim/50 outline-none transition-colors focus:border-copper";
+  "w-full rounded-xl border border-champagne/15 bg-white/80 px-4 py-3 text-sm text-ivory placeholder:text-ivory-dim/50 outline-none transition-colors focus:border-copper";
 
 export default function Contact() {
   const [sent, setSent] = useState(false);
@@ -34,7 +34,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="ambient noise relative scroll-mt-20 overflow-hidden py-28 lg:py-36">
+    <section id="contact" className="ambient noise relative scroll-mt-20 overflow-hidden bg-walnut-900 py-28 lg:py-36">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <Reveal>
           <div className="eyebrow mb-5">Get in touch</div>
@@ -150,7 +150,7 @@ export default function Contact() {
                 title={`${site.name} factory location — Birgaon, Raipur`}
                 src={`https://www.google.com/maps?q=${site.mapsQuery}&output=embed`}
                 className="h-full min-h-56 w-full"
-                style={{ filter: "invert(0.88) hue-rotate(185deg) saturate(0.4) brightness(0.9)" }}
+                style={{ filter: "sepia(0.25) saturate(0.8)" }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />

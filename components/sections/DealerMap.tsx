@@ -58,7 +58,7 @@ const cities: City[] = [
 
 export default function DealerMap() {
   return (
-    <section className="relative overflow-hidden border-y border-champagne/8 bg-walnut-900/25 py-28 lg:py-36">
+    <section className="relative overflow-hidden py-28 lg:py-36">
       <div className="ambient pointer-events-none absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>

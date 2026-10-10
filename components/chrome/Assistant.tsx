@@ -252,7 +252,7 @@ export default function Assistant({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.96 }}
           transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-          className="glass-strong flex w-[min(21rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.5)]"
+          className="glass-strong !bg-walnut-950 flex w-[min(21rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl shadow-[0_24px_64px_rgba(59,40,25,0.22)]"
           role="dialog"
           aria-label={`${site.shortName} assistant`}
         >

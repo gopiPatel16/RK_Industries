@@ -132,7 +132,7 @@ export default function DoorVisual({
         </div>
         {/* leaf edge (visible when ajar) */}
         <div
-          className="absolute right-0 top-0 h-full w-[10px] origin-right rounded-r-sm bg-[#1d0f07]"
+          className="absolute right-0 top-0 h-full w-[10px] origin-right rounded-r-sm bg-[#2e1d13]"
           style={{ transform: "rotateY(90deg) translateX(5px)" }}
         />
       </div>

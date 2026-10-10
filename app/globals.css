@@ -2,10 +2,31 @@
 
 /* ── ARANYA · dark-luxury design tokens ─────────────────────── */
 :root {
-  --walnut-950: #130906;
-  --walnut-900: #1b0e08;
-  --walnut-800: #26140b;
-  --walnut-700: #33200f;
+  /* Light theme: warm off-white page, beige panels, walnut ink. The token
+     names are roles — walnut-* are surfaces, ivory/champagne are ink — so
+     every component follows the theme without per-file edits. */
+  --walnut-950: #faf7f2;
+  --walnut-900: #f1e9dc;
+  --walnut-800: #e6dac8;
+  --walnut-700: #d6c4aa;
+  --coffee: #c9b49a;
+  --coffee-light: #b39a7c;
+  --copper: #a4672f;
+  --copper-bright: #b8783b;
+  --champagne: #3b2819;
+  --ivory: #2a1d14;
+  --ivory-dim: #6b5747;
+  --glow: rgba(184, 120, 59, 0.25);
+  --shimmer-hi: #c98a4b;
+}
+
+/* Sections built on dark imagery (the hero photo, the 3D door stages) keep
+   the original dark-luxury palette. */
+.theme-dark {
+  --walnut-950: #22160f;
+  --walnut-900: #2b1c13;
+  --walnut-800: #37251a;
+  --walnut-700: #453022;
   --coffee: #4a2c17;
   --coffee-light: #6b4226;
   --copper: #c98a4b;
@@ -14,6 +35,8 @@
   --ivory: #f5efe4;
   --ivory-dim: #cbbfa9;
   --glow: rgba(232, 168, 96, 0.35);
+  --shimmer-hi: #fff8ec;
+  color: var(--ivory);
 }
 
 @theme inline {
@@ -84,21 +107,39 @@ body {
 .glass {
   background: linear-gradient(
     135deg,
-    rgba(233, 213, 184, 0.07),
-    rgba(233, 213, 184, 0.02)
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0.45)
   );
   backdrop-filter: blur(18px) saturate(1.3);
   -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  border: 1px solid rgba(233, 213, 184, 0.1);
+  border: 1px solid rgba(59, 40, 25, 0.1);
+  box-shadow: 0 1px 2px rgba(59, 40, 25, 0.04), 0 8px 24px rgba(59, 40, 25, 0.05);
 }
 .glass-strong {
   background: linear-gradient(
     135deg,
-    rgba(27, 14, 8, 0.72),
-    rgba(19, 9, 6, 0.6)
+    rgba(255, 253, 249, 0.9),
+    rgba(247, 242, 234, 0.82)
   );
   backdrop-filter: blur(22px) saturate(1.4);
   -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  border: 1px solid rgba(59, 40, 25, 0.1);
+}
+.theme-dark .glass {
+  background: linear-gradient(
+    135deg,
+    rgba(233, 213, 184, 0.07),
+    rgba(233, 213, 184, 0.02)
+  );
+  border: 1px solid rgba(233, 213, 184, 0.1);
+  box-shadow: none;
+}
+.theme-dark .glass-strong {
+  background: linear-gradient(
+    135deg,
+    rgba(43, 28, 19, 0.72),
+    rgba(34, 22, 15, 0.6)
+  );
   border: 1px solid rgba(233, 213, 184, 0.12);
 }
 
@@ -166,7 +207,7 @@ body {
   padding: 1rem 2rem;
   border-radius: 9999px;
   background: linear-gradient(135deg, var(--copper-bright), var(--copper) 55%, #9c6534);
-  color: var(--walnut-950);
+  color: #fffaf2;
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
@@ -186,11 +227,11 @@ body {
   gap: 0.6rem;
   padding: 1rem 2rem;
   border-radius: 9999px;
-  border: 1px solid rgba(233, 213, 184, 0.25);
+  border: 1px solid color-mix(in srgb, var(--champagne) 25%, transparent);
   color: var(--champagne);
   font-weight: 600;
   font-size: 0.9rem;
-  background: rgba(233, 213, 184, 0.03);
+  background: color-mix(in srgb, var(--champagne) 3%, transparent);
   backdrop-filter: blur(8px);
   transition: border-color 0.4s, background 0.4s;
 }
@@ -271,7 +312,7 @@ body {
   background: linear-gradient(
     110deg,
     var(--champagne) 35%,
-    #fff8ec 50%,
+    var(--shimmer-hi) 50%,
     var(--champagne) 65%
   );
   background-size: 200% 100%;
